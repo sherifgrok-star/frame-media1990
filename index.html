@@ -1,0 +1,1839 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Frame Media – We Turn Ideas Into Cinematic Visual Experiences.">
+<title>Frame Media | Cinematic Visual Experiences</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Syncopate:wght@400;700&family=Syne:wght@400;500;600;700;800&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500&display=swap" rel="stylesheet">
+<style>
+/* ════════════════════════════════════════════
+   BRAND TOKENS
+════════════════════════════════════════════ */
+:root {
+  --cyan:#00D4FF; --blue:#3B82F6; --violet:#8B5CF6;
+  --deep-violet:#6D28D9; --magenta:#C026D3;
+  --dark:#04060C; --dark2:#080C18; --dark3:#0D1225;
+  --glass:rgba(255,255,255,.04); --glass-border:rgba(255,255,255,.08);
+  --text-primary:#F8FAFF; --text-secondary:rgba(248,250,255,.65);
+  --text-muted:rgba(248,250,255,.35);
+  --grad:linear-gradient(135deg,var(--cyan) 0%,var(--blue) 35%,var(--violet) 70%,var(--magenta) 100%);
+  --grad-soft:linear-gradient(135deg,rgba(0,212,255,.15) 0%,rgba(59,130,246,.1) 50%,rgba(139,92,246,.15) 100%);
+  --glow-c:0 0 40px rgba(0,212,255,.3),0 0 80px rgba(0,212,255,.1);
+  --glow-v:0 0 40px rgba(139,92,246,.3),0 0 80px rgba(139,92,246,.1);
+  --fdisp:'Syncopate',sans-serif; --fhead:'Syne',sans-serif; --fbody:'DM Sans',sans-serif;
+  --nav-h:80px; --spad:120px; --rcrd:16px;
+  --ease:all .4s cubic-bezier(.23,1,.32,1);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--dark);color:var(--text-primary);font-family:var(--fbody);overflow-x:hidden;cursor:none}
+a{color:inherit;text-decoration:none}
+button{font-family:var(--fbody)}
+
+/* ════ CURSOR ════ */
+#cur{width:12px;height:12px;background:var(--cyan);border-radius:50%;position:fixed;top:0;left:0;pointer-events:none;z-index:9999;mix-blend-mode:screen;transition:transform .1s}
+#cur-ring{width:40px;height:40px;border:1px solid rgba(0,212,255,.5);border-radius:50%;position:fixed;top:0;left:0;pointer-events:none;z-index:9998;transition:transform .15s cubic-bezier(.23,1,.32,1),border-color .3s}
+
+/* ════ LOADER ════ */
+#loader{position:fixed;inset:0;background:var(--dark);z-index:10000;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:32px;transition:opacity .8s,transform .8s}
+#loader.gone{opacity:0;transform:scale(1.05);pointer-events:none}
+.ldr-logo{display:flex;flex-direction:column;align-items:center;gap:16px;animation:lReveal 1.2s cubic-bezier(.23,1,.32,1) .3s both}
+@keyframes lReveal{from{opacity:0;transform:translateY(30px) scale(.9)}to{opacity:1;transform:none}}
+.ldr-f{width:80px;height:80px;display:grid;grid-template-columns:repeat(6,1fr);grid-template-rows:repeat(6,1fr);gap:3px}
+.ldr-f .d{border-radius:2px;background:var(--grad);animation:dPulse 1.5s ease-in-out infinite}
+.ldr-f .d:nth-child(even){animation-delay:.2s}
+.ldr-f .d:nth-child(3n){animation-delay:.4s}
+@keyframes dPulse{0%,100%{opacity:.3;transform:scale(.8)}50%{opacity:1;transform:scale(1)}}
+.ldr-name{font-family:var(--fdisp);font-size:1.5rem;letter-spacing:.4em;background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.ldr-bar{width:200px;height:1px;background:var(--glass-border);border-radius:4px;overflow:hidden}
+.ldr-fill{height:100%;background:var(--grad);animation:bFill 2.2s ease forwards .8s;width:0}
+@keyframes bFill{to{width:100%}}
+.ldr-pct{font-family:var(--fhead);font-size:.75rem;letter-spacing:.2em;color:var(--text-muted)}
+
+/* ════ NAV ════ */
+nav{position:fixed;top:0;left:0;right:0;height:var(--nav-h);z-index:1000;transition:background .4s,backdrop-filter .4s;display:flex;align-items:center}
+nav.scrolled{background:rgba(4,6,12,.88);backdrop-filter:blur(20px);border-bottom:1px solid var(--glass-border)}
+.nav-in{max-width:1400px;margin:0 auto;width:100%;padding:0 40px;display:flex;align-items:center;justify-content:space-between}
+.nav-logo{display:flex;align-items:center;gap:12px}
+.nli{width:36px;height:36px;display:grid;grid-template-columns:repeat(4,1fr);grid-template-rows:repeat(4,1fr);gap:2px}
+.nli .d{border-radius:1px;background:var(--grad)}
+.nli .d.off{background:transparent}
+.nlt{font-family:var(--fdisp);font-size:.85rem;letter-spacing:.25em;background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.nav-links{display:flex;align-items:center;gap:36px;list-style:none}
+.nav-links a{font-family:var(--fhead);font-size:.8rem;letter-spacing:.1em;color:var(--text-secondary);position:relative;transition:color .3s}
+.nav-links a::after{content:'';position:absolute;bottom:-4px;left:0;width:0;height:1px;background:var(--grad);transition:width .3s}
+.nav-links a:hover{color:var(--text-primary)}
+.nav-links a:hover::after{width:100%}
+.nav-cta{padding:10px 24px!important;border-radius:50px;border:1px solid rgba(0,212,255,.4);background:rgba(0,212,255,.06);color:var(--cyan)!important;transition:var(--ease)!important}
+.nav-cta::after{display:none!important}
+.nav-cta:hover{background:rgba(0,212,255,.15)!important;box-shadow:var(--glow-c)}
+.nav-tog{display:none;flex-direction:column;gap:5px;background:none;border:none;cursor:none;padding:8px}
+.nav-tog span{width:24px;height:1px;background:var(--text-primary);transition:var(--ease)}
+.mob-nav{display:none;position:fixed;inset:0;background:rgba(4,6,12,.97);backdrop-filter:blur(20px);z-index:999;align-items:center;justify-content:center;flex-direction:column;gap:36px;opacity:0;pointer-events:none;transition:opacity .4s}
+.mob-nav.open{display:flex;opacity:1;pointer-events:all}
+.mob-nav a{font-family:var(--fdisp);font-size:1.4rem;letter-spacing:.12em;transition:color .3s}
+.mob-nav a:hover{color:var(--cyan)}
+.mob-close{position:absolute;top:24px;right:24px;background:none;border:none;color:var(--text-primary);font-size:1.5rem;cursor:none}
+
+/* ════ HERO ════ */
+#hero{position:relative;min-height:100vh;display:flex;align-items:center;justify-content:center;overflow:hidden}
+#hero-canvas{position:absolute;inset:0;width:100%;height:100%}
+.h-grid{position:absolute;inset:0;background-image:linear-gradient(rgba(0,212,255,.03) 1px,transparent 1px),linear-gradient(90deg,rgba(0,212,255,.03) 1px,transparent 1px);background-size:60px 60px;mask-image:radial-gradient(ellipse at center,black 30%,transparent 80%)}
+.h-gL{position:absolute;left:-200px;top:20%;width:500px;height:500px;background:radial-gradient(circle,rgba(0,212,255,.12) 0%,transparent 70%);border-radius:50%;animation:gF 8s ease-in-out infinite}
+.h-gR{position:absolute;right:-200px;top:40%;width:600px;height:600px;background:radial-gradient(circle,rgba(139,92,246,.1) 0%,transparent 70%);border-radius:50%;animation:gF 10s ease-in-out infinite reverse}
+@keyframes gF{0%,100%{transform:translateY(0) scale(1)}50%{transform:translateY(-40px) scale(1.05)}}
+.h-cnt{position:relative;z-index:2;text-align:center;max-width:1000px;padding:0 24px;opacity:0;transform:translateY(40px);animation:hReveal 1.2s cubic-bezier(.23,1,.32,1) 2.8s forwards}
+@keyframes hReveal{to{opacity:1;transform:none}}
+.h-eye{display:inline-flex;align-items:center;gap:10px;font-family:var(--fhead);font-size:.72rem;letter-spacing:.3em;color:var(--cyan);margin-bottom:28px;padding:8px 20px;border:1px solid rgba(0,212,255,.2);border-radius:50px;background:rgba(0,212,255,.05)}
+.h-eye::before{content:'';width:6px;height:6px;background:var(--cyan);border-radius:50%;animation:blink 2s ease-in-out infinite}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.2}}
+.h-title{font-family:var(--fdisp);font-size:clamp(3.5rem,9vw,8rem);font-weight:700;letter-spacing:.05em;line-height:.95;margin-bottom:28px;background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;white-space:pre-line}
+.h-sub{font-family:var(--fhead);font-size:clamp(1rem,2.5vw,1.4rem);color:var(--text-secondary);line-height:1.6;margin-bottom:52px;max-width:640px;margin-left:auto;margin-right:auto}
+.h-ctas{display:flex;align-items:center;justify-content:center;gap:20px;flex-wrap:wrap}
+.btn-p{display:inline-flex;align-items:center;gap:10px;padding:16px 36px;border-radius:50px;background:var(--grad);color:#fff;font-family:var(--fhead);font-size:.9rem;font-weight:600;letter-spacing:.05em;border:none;cursor:none;transition:var(--ease);position:relative;overflow:hidden}
+.btn-p:hover{transform:translateY(-3px);box-shadow:0 20px 60px rgba(0,212,255,.3)}
+.btn-s{display:inline-flex;align-items:center;gap:10px;padding:15px 36px;border-radius:50px;background:transparent;font-family:var(--fhead);font-size:.9rem;font-weight:500;letter-spacing:.05em;border:1px solid var(--glass-border);cursor:none;transition:var(--ease)}
+.btn-s:hover{border-color:rgba(139,92,246,.5);background:rgba(139,92,246,.08);transform:translateY(-3px);box-shadow:var(--glow-v)}
+.h-scroll{position:absolute;bottom:40px;left:50%;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:8px;font-family:var(--fhead);font-size:.65rem;letter-spacing:.2em;color:var(--text-muted);z-index:2;animation:hReveal 1s ease 3.5s both}
+.h-line{width:1px;height:48px;background:linear-gradient(to bottom,var(--cyan),transparent);animation:sLine 2s ease-in-out infinite}
+@keyframes sLine{0%,100%{opacity:1;transform:scaleY(1)}50%{opacity:.3;transform:scaleY(.6)}}
+
+/* ════ SECTION BASE ════ */
+section{padding:var(--spad) 0}
+.container{max-width:1400px;margin:0 auto;padding:0 40px}
+.sec-hdr{text-align:center;margin-bottom:72px}
+.sec-tag{display:inline-block;font-family:var(--fhead);font-size:.7rem;letter-spacing:.3em;color:var(--cyan);margin-bottom:20px;padding:6px 18px;border:1px solid rgba(0,212,255,.2);border-radius:50px;background:rgba(0,212,255,.05);text-transform:uppercase}
+.sec-ttl{font-family:var(--fhead);font-size:clamp(2rem,4vw,3.2rem);font-weight:700;line-height:1.15;margin-bottom:20px}
+.sec-ttl span{background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.sec-desc{font-size:1.05rem;color:var(--text-secondary);line-height:1.7;max-width:580px;margin:0 auto}
+
+/* ════ REVEAL ════ */
+.rv{opacity:0;transform:translateY(40px);transition:opacity .8s cubic-bezier(.23,1,.32,1),transform .8s cubic-bezier(.23,1,.32,1)}
+.rv.vis{opacity:1;transform:none}
+.rvL{opacity:0;transform:translateX(-40px);transition:opacity .8s cubic-bezier(.23,1,.32,1),transform .8s cubic-bezier(.23,1,.32,1)}
+.rvL.vis{opacity:1;transform:none}
+.rvR{opacity:0;transform:translateX(40px);transition:opacity .8s cubic-bezier(.23,1,.32,1),transform .8s cubic-bezier(.23,1,.32,1)}
+.rvR.vis{opacity:1;transform:none}
+[data-d="1"]{transition-delay:.1s}[data-d="2"]{transition-delay:.2s}[data-d="3"]{transition-delay:.3s}
+[data-d="4"]{transition-delay:.4s}[data-d="5"]{transition-delay:.5s}[data-d="6"]{transition-delay:.6s}
+[data-d="7"]{transition-delay:.7s}[data-d="8"]{transition-delay:.8s}
+
+/* ════ SERVICES ════ */
+#services{background:var(--dark2);position:relative;overflow:hidden}
+#services::before{content:'';position:absolute;top:-200px;left:50%;transform:translateX(-50%);width:800px;height:400px;background:radial-gradient(ellipse,rgba(59,130,246,.08) 0%,transparent 70%)}
+.srv-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:24px}
+.srv-card{background:var(--glass);border:1px solid var(--glass-border);border-radius:var(--rcrd);padding:36px 32px;cursor:none;transition:var(--ease);position:relative;overflow:hidden}
+.srv-card::before{content:'';position:absolute;inset:0;background:var(--grad-soft);opacity:0;transition:opacity .4s}
+.srv-card::after{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:var(--grad);transform:scaleX(0);transform-origin:left;transition:transform .5s cubic-bezier(.23,1,.32,1)}
+.srv-card:hover{border-color:rgba(0,212,255,.25);transform:translateY(-8px);box-shadow:0 30px 80px rgba(0,0,0,.4)}
+.srv-card:hover::before{opacity:1}
+.srv-card:hover::after{transform:scaleX(1)}
+.srv-ico{width:56px;height:56px;border-radius:14px;background:var(--grad);display:flex;align-items:center;justify-content:center;font-size:1.5rem;margin-bottom:24px;position:relative;z-index:1;transition:transform .4s,box-shadow .4s}
+.srv-card:hover .srv-ico{transform:scale(1.1) rotate(5deg);box-shadow:0 0 30px rgba(0,212,255,.4)}
+.srv-name{font-family:var(--fhead);font-size:1.05rem;font-weight:700;margin-bottom:12px;position:relative;z-index:1}
+.srv-desc覆{font-size:.87rem;color:var(--text-secondary);line-height:1.65;position:relative;z-index:1}
+.srv-arr{position:absolute;bottom:28px;right:28px;width:32px;height:32px;border-radius:50%;border:1px solid var(--glass-border);display:flex;align-items:center;justify-content:center;font-size:.8rem;color:var(--text-muted);transition:var(--ease);z-index:1}
+.srv-card:hover .srv-arr{border-color:var(--cyan);color:var(--cyan);transform:translate(4px,-4px)}
+
+/* ════ PORTFOLIO ════ */
+#portfolio{background:var(--dark);position:relative}
+.pf-filters{display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:12px;margin-bottom:52px}
+.pf-flt{padding:9px 22px;border-radius:50px;border:1px solid var(--glass-border);background:transparent;color:var(--text-secondary);font-family:var(--fhead);font-size:.78rem;letter-spacing:.08em;cursor:none;transition:var(--ease)}
+.pf-flt:hover,.pf-flt.on{border-color:rgba(0,212,255,.4);background:rgba(0,212,255,.08);color:var(--cyan)}
+#pf-grid{display:grid;grid-template-columns:repeat(12,1fr);gap:20px}
+.pf-item{border-radius:var(--rcrd);overflow:hidden;position:relative;background:var(--dark3);border:1px solid var(--glass-border);cursor:none;transition:var(--ease)}
+.pf-item:nth-child(1){grid-column:span 8;grid-row:span 2;min-height:500px}
+.pf-item:nth-child(2),.pf-item:nth-child(3){grid-column:span 4;min-height:240px}
+.pf-item:nth-child(n+4){grid-column:span 4;min-height:280px}
+.pf-item:hover{transform:scale(1.02);box-shadow:0 30px 80px rgba(0,0,0,.5)}
+.pf-thumb{width:100%;height:100%;min-height:inherit;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;background-size:cover;background-position:center}
+.pf-thumb-bg{position:absolute;inset:0;opacity:1;transition:opacity .4s}
+.pf-pattern{position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,.03) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.03) 1px,transparent 1px);background-size:30px 30px}
+
+/* إصلاح الكرسور وعلامة اليد هنا للـ pointer */
+.pf-play{width:64px;height:64px;border-radius:50%;border:2px solid rgba(255,255,255,.3);display:flex;align-items:center;justify-content:center;font-size:1.3rem;color:#fff;background:rgba(255,255,255,.08);backdrop-filter:blur(10px);transition:var(--ease);position:relative;z-index:20;outline:none;cursor:pointer!important;pointer-events:auto!important}
+.pf-item:hover .pf-play{background:var(--grad);border-color:transparent;transform:scale(1.1);box-shadow:0 0 40px rgba(0,212,255,.5)}
+.pf-ov{position:absolute;inset:0;background:linear-gradient(to top,rgba(4,6,12,.9) 0%,transparent 60%);opacity:0;transition:opacity .4s;display:flex;align-items:flex-end;padding:28px;z-index:3}
+.pf-item:hover .pf-ov{opacity:1}
+.pf-cat{font-family:var(--fhead);font-size:.65rem;letter-spacing:.2em;color:var(--cyan);text-transform:uppercase;margin-bottom:8px}
+.pf-title{font-family:var(--fhead);font-size:1.05rem;font-weight:700}
+
+/* Video Modal */
+#vid-modal{position:fixed;inset:0;background:rgba(0,0,0,.92);z-index:20000;display:none;align-items:center;justify-content:center}
+#vid-modal.open{display:flex}
+.vid-wrap{position:relative;width:90vw;max-width:900px;aspect-ratio:16/9}
+.vid-wrap iframe{width:100%;height:100%;border:none;border-radius:12px}
+.vid-close{position:absolute;top:-44px;right:0;background:none;border:none;color:#fff;font-size:1.8rem;cursor:pointer!important}
+
+/* ════ STATS ════ */
+#stats{background:var(--dark2);position:relative;overflow:hidden}
+#stats::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 20% 50%,rgba(0,212,255,.07) 0%,transparent 50%),radial-gradient(ellipse at 80% 50%,rgba(139,92,246,.07) 0%,transparent 50%)}
+.stat-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:2px;background:var(--glass-border);border-radius:var(--rcrd);overflow:hidden}
+.stat-c{background:var(--dark2);padding:52px 40px;text-align:center;position:relative;overflow:hidden;transition:var(--ease)}
+.stat-c::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:var(--grad);transform:scaleX(0);transition:transform .5s cubic-bezier(.23,1,.32,1)}
+.stat-c:hover::before{transform:scaleX(1)}
+.stat-c:hover{background:rgba(0,212,255,.03)}
+.stat-num{font-family:var(--fdisp);font-size:clamp(2.5rem,5vw,4rem);font-weight:700;background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:12px;line-height:1}
+.stat-lbl{font-family:var(--fhead);font-size:.85rem;color:var(--text-secondary);letter-spacing:.05em}
+.stat-ico{font-size:2rem;margin-bottom:16px;opacity:.6}
+
+/* ════ ABOUT ════ */
+#about{background:var(--dark);position:relative}
+.abt-grid{display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:center}
+.abt-vis{position:relative}
+.abt-frame{border-radius:20px;background:var(--dark3);border:1px solid var(--glass-border);aspect-ratio:4/3;display:flex;align-items:center;justify-content:center;overflow:hidden;position:relative}
+.abt-fi{position:absolute;inset:0;background:radial-gradient(ellipse at 30% 30%,rgba(0,212,255,.15) 0%,transparent 50%),radial-gradient(ellipse at 70% 70%,rgba(139,92,246,.15) 0%,transparent 50%)}
+.abt-fg{position:absolute;inset:0;background-image:linear-gradient(rgba(0,212,255,.05) 1px,transparent 1px),linear-gradient(90deg,rgba(0,212,255,.05) 1px,transparent 1px);background-size:40px 40px}
+.abt-fl{position:relative;z-index:2;display:flex;flex-direction:column;align-items:center;gap:20px}
+.abt-fgrid{width:100px;height:100px;display:grid;grid-template-columns:repeat(6,1fr);grid-template-rows:repeat(6,1fr);gap:4px}
+.abt-fgrid .d{border-radius:3px;background:var(--grad);animation:aDot 3s ease-in-out infinite}
+.abt-fgrid .d:nth-child(odd){animation-delay:.5s}
+.abt-fgrid .d:nth-child(3n){animation-delay:1s}
+@keyframes aDot{0%,100%{opacity:.4}50%{opacity:1}}
+.abt-ft{font-family:var(--fdisp);font-size:1.2rem;letter-spacing:.3em;background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.abt-badge{position:absolute;bottom:-20px;right:-20px;background:var(--dark2);border:1px solid var(--glass-border);border-radius:16px;padding:20px 24px;display:flex;align-items:center;gap:16px}
+.abt-bi{width:44px;height:44px;border-radius:12px;background:var(--grad);display:flex;align-items:center;justify-content:center;font-size:1.2rem}
+.abt-bn{font-family:var(--fdisp);font-size:1.4rem;font-weight:700;background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.abt-bl{font-size:.75rem;color:var(--text-muted);font-family:var(--fhead)}
+.abt-ttl{font-family:var(--fhead);font-size:clamp(2rem,3.5vw,2.8rem);font-weight:700;line-height:1.2;margin-bottom:24px}
+.abt-ttl span{background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.abt-txt{font-size:1rem;color:var(--text-secondary);line-height:1.8;margin-bottom:20px}
+.abt-feats{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:36px}
+.abt-feat{display:flex;align-items:flex-start;gap:12px;padding:16px;background:var(--glass);border:1px solid var(--glass-border);border-radius:12px}
+.abt-feat-txt{font-family:var(--fhead);font-size:.85rem;font-weight:600}
+
+/* ════ MISSION/VISION ════ */
+#mission{background:var(--dark2);position:relative;overflow:hidden}
+#mission::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at center,rgba(59,130,246,.06) 0%,transparent 70%)}
+.mv-grid{display:grid;grid-template-columns:1fr 1fr;gap:32px}
+.mv-card{background:var(--glass);border:1px solid var(--glass-border);border-radius:20px;padding:52px 48px;position:relative;overflow:hidden;transition:var(--ease)}
+.mv-card::before{content:'';position:absolute;inset:0;opacity:0;transition:opacity .4s}
+.mv-card.msn::before{background:radial-gradient(ellipse at top left,rgba(0,212,255,.08) 0%,transparent 60%)}
+.mv-card.vsn::before{background:radial-gradient(ellipse at bottom right,rgba(139,92,246,.08) 0%,transparent 60%)}
+.mv-card:hover::before{opacity:1}
+.mv-card:hover{border-color:rgba(0,212,255,.2);transform:translateY(-6px)}
+.mv-card.vsn:hover{border-color:rgba(139,92,246,.2)}
+.mv-type{font-family:var(--fhead);font-size:.65rem;letter-spacing:.35em;margin-bottom:24px;display:flex;align-items:center;gap:10px}
+.mv-card.msn .mv-type{color:var(--cyan)}
+.mv-card.vsn .mv-type{color:var(--violet)}
+.mv-type::before{content:'';width:24px;height:1px}
+.mv-card.msn .mv-type::before{background:var(--cyan)}
+.mv-card.vsn .mv-type::before{background:var(--violet)}
+.mv-ico{font-size:2.5rem;margin-bottom:28px;display:block}
+.mv-ttl{font-family:var(--fhead);font-size:1.6rem;font-weight:700;margin-bottom:20px}
+.mv-txt{font-size:1rem;color:var(--text-secondary);line-height:1.8}
+
+/* ════ TESTIMONIALS ════ */
+#testimonials{background:var(--dark);position:relative;overflow:hidden}
+.tst-outer{overflow:hidden;position:relative}
+.tst-outer::before,.tst-outer::after{content:'';position:absolute;top:0;bottom:0;width:100px;z-index:2;pointer-events:none}
+.tst-outer::before{left:0;background:linear-gradient(to right,var(--dark),transparent)}
+.tst-outer::after{right:0;background:linear-gradient(to left,var(--dark),transparent)}
+.tst-track{display:flex;gap:24px;animation:sTst 40s linear infinite;width:max-content}
+.tst-track:hover{animation-play-state:paused}
+@keyframes sTst{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+.tst-card{width:360px;flex-shrink:0;background:var(--glass);border:1px solid var(--glass-border);border-radius:var(--rcrd);padding:36px 32px;transition:border-color .3s}
+.tst-card:hover{border-color:rgba(0,212,255,.2)}
+.tst-stars{display:flex;gap:4px;margin-bottom:20px;font-size:.9rem}
+.tst-stars span{color:var(--cyan)}
+.tst-text{font-size:.92rem;color:var(--text-secondary);line-height:1.75;margin-bottom:28px;font-style:italic}
+.tst-auth{display:flex;align-items:center;gap:14px}
+.tst-av{width:44px;height:44px;border-radius:50%;background:var(--grad);display:flex;align-items:center;justify-content:center;font-family:var(--fhead);font-size:.9rem;font-weight:700;color:#fff;flex-shrink:0}
+.tst-name{font-family:var(--fhead);font-size:.9rem;font-weight:700;margin-bottom:3px}
+.tst-role{font-size:.75rem;color:var(--text-muted)}
+
+/* ════ CONTACT ════ */
+#contact{background:var(--dark2);position:relative;overflow:hidden}
+#contact::before{content:'';position:absolute;top:-100px;left:50%;transform:translateX(-50%);width:600px;height:300px;background:radial-gradient(ellipse,rgba(139,92,246,.08) 0%,transparent 70%)}
+.ct-grid{display:grid;grid-template-columns:1fr 1.5fr;gap:80px;align-items:start}
+.ct-ttl{font-family:var(--fhead);font-size:clamp(1.8rem,3vw,2.4rem);font-weight:700;line-height:1.25;margin-bottom:24px}
+.ct-ttl span{background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.ct-p{color:var(--text-secondary);line-height:1.75;margin-bottom:40px;font-size:.95rem}
+.ct-chs{display:flex;flex-direction:column;gap:16px;margin-bottom:40px}
+.ct-ch{display:flex;align-items:center;gap:16px;padding:18px 20px;background:var(--glass);border:1px solid var(--glass-border);border-radius:12px;transition:var(--ease)}
+.ct-ch:hover{border-color:rgba(0,212,255,.3);background:rgba(0,212,255,.05);transform:translateX(6px)}
+.ct-ch-ico{width:40px;height:40px;border-radius:10px;background:var(--grad);display:flex;align-items:center;justify-content:center;font-size:1rem;flex-shrink:0}
+.ct-ch-lbl{font-family:var(--fhead);font-size:.7rem;letter-spacing:.15em;color:var(--text-muted);text-transform:uppercase;margin-bottom:2px}
+.ct-ch-val{font-size:.9rem;font-weight:500}
+.soc-links{display:flex;gap:12px}
+.soc-lnk{width:44px;height:44px;border-radius:50%;border:1px solid var(--glass-border);display:flex;align-items:center;justify-content:center;font-size:1.1rem;transition:var(--ease)}
+.soc-lnk:hover{border-color:rgba(0,212,255,.4);background:rgba(0,212,255,.08);transform:translateY(-4px);box-shadow:var(--glow-c)}
+.ct-form{}
+.fg{display:flex;flex-direction:column;gap:8px;margin-bottom:20px}
+.fg label{font-family:var(--fhead);font-size:.75rem;letter-spacing:.12em;color:var(--text-muted);text-transform:uppercase}
+.fg input,.fg textarea,.fg select{background:var(--glass);border:1px solid var(--glass-border);border-radius:10px;padding:14px 18px;color:var(--text-primary);font-family:var(--fbody);font-size:.95rem;outline:none;transition:border-color .3s,box-shadow .3s;width:100%}
+.fg input:focus,.fg textarea:focus,.fg select:focus{border-color:rgba(0,212,255,.4);box-shadow:0 0 0 3px rgba(0,212,255,.08)}
+.fg textarea{min-height:130px;resize:vertical}
+.fg select{background-color:var(--dark3);cursor:pointer}
+.fg select option{background:var(--dark3)}
+.f-row{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.f-submit{width:100%;padding:18px;border-radius:12px;background:var(--grad);border:none;color:#fff;font-family:var(--fhead);font-size:.95rem;font-weight:700;letter-spacing:.08em;cursor:none;transition:var(--ease);margin-top:8px}
+.f-submit:hover{transform:translateY(-3px);box-shadow:0 20px 60px rgba(0,212,255,.3)}
+.map-ph{margin-top:40px;border-radius:16px;background:var(--dark3);border:1px solid var(--glass-border);height:180px;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:12px;font-family:var(--fhead);font-size:.85rem;color:var(--text-muted);position:relative;overflow:hidden}
+.map-g{position:absolute;inset:0;background-image:linear-gradient(rgba(0,212,255,.04) 1px,transparent 1px),linear-gradient(90deg,rgba(0,212,255,.04) 1px,transparent 1px);background-size:24px 24px}
+.map-pin{font-size:2rem;position:relative;z-index:1;animation:pinB 2s ease-in-out infinite}
+@keyframes pinB{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+.map-txt{position:relative;z-index:1}
+
+/* ════ FOOTER ════ */
+footer{background:var(--dark2);border-top:1px solid var(--glass-border)}
+.ft-in{max-width:1400px;margin:0 auto;padding:80px 40px 40px}
+.ft-top{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:60px;margin-bottom:60px}
+.ft-logo{display:flex;align-items:center;gap:12px;margin-bottom:20px}
+.ft-li{width:36px;height:36px;display:grid;grid-template-columns:repeat(4,1fr);grid-template-rows:repeat(4,1fr);gap:2px}
+.ft-li .d{border-radius:1px;background:var(--grad)}
+.ft-li .d.off{background:transparent}
+.ft-lt{font-family:var(--fdisp);font-size:.85rem;letter-spacing:.25em;background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.ft-tgl{font-size:.88rem;color:var(--text-secondary);line-height:1.7;margin-bottom:24px}
+.ft-col-ttl{font-family:var(--fhead);font-size:.75rem;letter-spacing:.2em;color:var(--text-muted);text-transform:uppercase;margin-bottom:20px}
+.ft-links{list-style:none;display:flex;flex-direction:column;gap:12px}
+.ft-links a{font-size:.88rem;color:var(--text-secondary);transition:color .3s}
+.ft-links a:hover{color:var(--cyan)}
+.ft-bot{display:flex;align-items:center;justify-content:space-between;padding-top:40px;border-top:1px solid var(--glass-border)}
+.ft-copy{font-size:.82rem;color:var(--text-muted)}
+.ft-copy span{background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.ft-blinks{list-style:none;display:flex;gap:24px}
+.ft-blinks a{font-size:.82rem;color:var(--text-muted);transition:color .3s}
+.ft-blinks a:hover{color:var(--text-secondary)}
+.wa-float{position:fixed;bottom:32px;right:32px;width:56px;height:56px;border-radius:50%;background:linear-gradient(135deg,#25D366,#128C7E);display:flex;align-items:center;justify-content:center;font-size:1.5rem;z-index:500;box-shadow:0 8px 32px rgba(37,211,102,.4);transition:var(--ease);cursor:pointer!important}
+.wa-float:hover{transform:scale(1.1) translateY(-4px);box-shadow:0 16px 48px rgba(37,211,102,.5)}
+
+/* ════ TOAST ════ */
+#toast{position:fixed;bottom:32px;left:50%;transform:translateX(-50%) translateY(100px);background:var(--dark3);border:1px solid rgba(0,212,255,.3);border-radius:50px;padding:14px 28px;font-family:var(--fhead);font-size:.85rem;color:var(--cyan);z-index:50000;transition:transform .4s cubic-bezier(.23,1,.32,1);pointer-events:none;white-space:nowrap}
+#toast.show{transform:translateX(-50%) translateY(0)}
+
+/* ════ ADMIN WRAPPER ════ */
+#adm-wrap{display:none;position:fixed;inset:0;z-index:30000;background:var(--dark)}
+#adm-wrap.active{display:flex;flex-direction:column}
+
+/* ════ ADMIN LOGIN ════ */
+#adm-login{flex:1;display:flex;align-items:center;justify-content:center;background:var(--dark);background-image:radial-gradient(ellipse at 30% 30%,rgba(0,212,255,.06) 0%,transparent 50%),radial-gradient(ellipse at 70% 70%,rgba(139,92,246,.06) 0%,transparent 50%)}
+.adm-login-box{width:100%;max-width:420px;background:var(--dark3);border:1px solid var(--glass-border);border-radius:20px;padding:48px 40px;display:flex;flex-direction:column;gap:16px}
+.adm-login-logo{display:flex;flex-direction:column;align-items:center;gap:12px;margin-bottom:8px}
+.lf{width:56px;height:56px;display:grid;grid-template-columns:repeat(6,1fr);grid-template-rows:repeat(6,1fr);gap:3px}
+.lf .d{border-radius:2px;background:var(--grad)}
+.ln{font-family:var(--fdisp);font-size:1rem;letter-spacing:.3em;background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.adm-login-box h2{font-family:var(--fhead);font-size:1.4rem;font-weight:700;text-align:center}
+.adm-login-box p{font-size:.85rem;color:var(--text-muted);text-align:center;margin-top:-8px}
+.adm-inp{background:var(--glass);border:1px solid var(--glass-border);border-radius:10px;padding:14px 18px;color:var(--text-primary);font-family:var(--fbody);font-size:.95rem;outline:none;width:100%;transition:border-color .3s,box-shadow .3s}
+.adm-inp:focus{border-color:rgba(0,212,255,.4);box-shadow:0 0 0 3px rgba(0,212,255,.07)}
+.adm-btn-login{padding:14px;border-radius:10px;background:var(--grad);border:none;color:#fff;font-family:var(--fhead);font-size:.9rem;font-weight:700;cursor:pointer;transition:var(--ease);letter-spacing:.05em}
+.adm-btn-login:hover{opacity:.9;transform:translateY(-2px);box-shadow:0 12px 40px rgba(0,212,255,.3)}
+#adm-err{font-size:.8rem;color:#f87171;text-align:center;min-height:20px;font-family:var(--fhead)}
+.adm-hint{font-size:.75rem;color:var(--text-muted);text-align:center;line-height:1.6;padding:12px 16px;background:var(--glass);border-radius:8px;border:1px solid var(--glass-border)}
+
+/* ════ ADMIN DASHBOARD ════ */
+#adm-dash{display:none;flex:1;overflow:hidden}
+#adm-dash.active{display:flex}
+
+/* ── Sidebar ── */
+.adm-sidebar{width:280px;background:var(--dark2);border-right:1px solid var(--glass-border);display:flex;flex-direction:column;overflow-y:auto;flex-shrink:0}
+.adm-sb-logo{display:flex;align-items:center;gap:12px;padding:28px 24px;border-bottom:1px solid var(--glass-border)}
+.sli{width:32px;height:32px;display:grid;grid-template-columns:repeat(4,1fr);grid-template-rows:repeat(4,1fr);gap:2px}
+.sli .d{border-radius:1px;background:var(--grad)}
+.slt{font-family:var(--fdisp);font-size:.9rem;letter-spacing:.2em;background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.adm-sb-subtitle{font-family:var(--fhead);font-size:.6rem;letter-spacing:.2em;color:var(--text-muted);text-transform:uppercase}
+.adm-nav{flex:1;padding:20px 16px;display:flex;flex-direction:column;gap:4px}
+.adm-nav-sep{font-family:var(--fhead);font-size:.6rem;letter-spacing:.2em;color:var(--text-muted);text-transform:uppercase;padding:16px 12px 6px;margin-top:8px}
+.adm-nav-btn{display:flex;align-items:center;gap:10px;padding:11px 14px;border-radius:10px;background:none;border:1px solid transparent;color:var(--text-secondary);font-family:var(--fhead);font-size:.82rem;cursor:pointer;transition:var(--ease);text-align:left;width:100%}
+.adm-nav-btn:hover{background:var(--glass);color:var(--text-primary);border-color:var(--glass-border)}
+.adm-nav-btn.on{background:rgba(0,212,255,.1);color:var(--cyan);border-color:rgba(0,212,255,.25)}
+.adm-sb-footer{padding:20px 16px;border-top:1px solid var(--glass-border);display:flex;flex-direction:column;gap:8px}
+.adm-preview-btn,.adm-logout-btn{display:flex;align-items:center;gap:8px;padding:11px 14px;border-radius:10px;background:none;border:1px solid var(--glass-border);color:var(--text-secondary);font-family:var(--fhead);font-size:.82rem;cursor:pointer;transition:var(--ease);width:100%;justify-content:center;font-weight:500}
+.adm-preview-btn:hover{border-color:rgba(0,212,255,.4);color:var(--cyan);background:rgba(0,212,255,.05)}
+.adm-logout-btn:hover{border-color:rgba(248,113,113,.4);color:#f87171;background:rgba(248,113,113,.05)}
+
+/* ── Main area ── */
+.adm-main{flex:1;overflow-y:auto;background:var(--dark)}
+.adm-section{display:none;padding:48px 52px;min-height:100%}
+.adm-section.on{display:block}
+.adm-section-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:32px;flex-wrap:wrap;gap:12px;padding-bottom:24px;border-bottom:1px solid var(--glass-border)}
+.adm-section-ttl{font-family:var(--fhead);font-size:1.5rem;font-weight:700}
+.adm-section-ttl span{background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.adm-badge-cyan{padding:6px 16px;border-radius:50px;background:rgba(0,212,255,.1);border:1px solid rgba(0,212,255,.25);font-family:var(--fhead);font-size:.72rem;letter-spacing:.1em;color:var(--cyan)}
+
+/* ── Cards & Info ── */
+.adm-cards{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:28px}
+.adm-card{background:var(--glass);border:1px solid var(--glass-border);border-radius:16px;padding:24px 28px;transition:var(--ease)}
+.adm-card:hover{border-color:rgba(0,212,255,.25);background:rgba(0,212,255,.03);transform:translateY(-3px)}
+.adm-card-n{font-family:var(--fdisp);font-size:2rem;font-weight:700;background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:6px}
+.adm-card-l{font-family:var(--fhead);font-size:.78rem;color:var(--text-muted)}
+.adm-info{padding:16px 20px;background:rgba(0,212,255,.05);border:1px solid rgba(0,212,255,.15);border-radius:12px;font-size:.84rem;color:var(--text-secondary);line-height:1.65;margin-bottom:28px}
+
+/* ── Form elements ── */
+.adm-fg{display:flex;flex-direction:column;gap:8px;margin-bottom:20px}
+.adm-label{font-family:var(--fhead);font-size:.7rem;letter-spacing:.15em;color:var(--text-muted);text-transform:uppercase}
+.adm-field{background:var(--glass);border:1px solid var(--glass-border);border-radius:10px;padding:12px 16px;color:var(--text-primary);font-family:var(--fbody);font-size:.9rem;outline:none;transition:border-color .3s,box-shadow .3s;width:100%}
+.adm-field:focus{border-color:rgba(0,212,255,.45);box-shadow:0 0 0 3px rgba(0,212,255,.08)}
+textarea.adm-field{resize:vertical;min-height:80px;background:var(--glass)}
+select.adm-field{background-color:var(--dark3);cursor:pointer}
+select.adm-field option{background:var(--dark3)}
+.adm-row{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+.adm-row3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px}
+.adm-divider{height:1px;background:var(--glass-border);margin:24px 0}
+
+/* ── Buttons ── */
+.adm-btn{padding:10px 20px;border-radius:8px;border:none;font-family:var(--fhead);font-size:.8rem;font-weight:600;cursor:pointer;transition:var(--ease);letter-spacing:.04em}
+.adm-btn.primary{background:var(--grad);color:#fff}
+.adm-btn.primary:hover{opacity:.9;transform:translateY(-2px);box-shadow:0 8px 24px rgba(0,212,255,.3)}
+.adm-btn.secondary{background:var(--glass);border:1px solid var(--glass-border);color:var(--text-secondary)}
+.adm-btn.secondary:hover{border-color:rgba(0,212,255,.35);color:var(--text-primary);background:rgba(0,212,255,.05)}
+.adm-btn.danger{background:rgba(248,113,113,.1);border:1px solid rgba(248,113,113,.3);color:#f87171}
+.adm-btn.danger:hover{background:rgba(248,113,113,.2);border-color:rgba(248,113,113,.5)}
+.adm-btn.sm{padding:7px 12px;font-size:.72rem}
+.adm-btn-grp{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+
+/* ── Portfolio list (admin) ── */
+.pf-list{display:flex;flex-direction:column;gap:10px}
+.pf-list-item{display:flex;align-items:center;gap:16px;padding:14px 18px;background:var(--glass);border:1px solid var(--glass-border);border-radius:12px;transition:var(--ease)}
+.pf-list-item:hover{border-color:rgba(0,212,255,.2);background:rgba(0,212,255,.02)}
+.pf-list-thumb{width:60px;height:60px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:1.4rem;flex-shrink:0;overflow:hidden}
+.pf-list-info{flex:1;min-width:0}
+.pf-list-title{font-family:var(--fhead);font-size:.88rem;font-weight:600;margin-bottom:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pf-list-meta{font-size:.74rem;color:var(--text-muted)}
+.pf-list-featured{font-size:.72rem;color:var(--cyan);margin-left:6px}
+.pf-list-actions{display:flex;gap:8px;flex-shrink:0}
+
+/* ── Testimonials list (admin) ── */
+.tst-list{display:flex;flex-direction:column;gap:10px}
+.tst-list-item{padding:18px 22px;background:var(--glass);border:1px solid var(--glass-border);border-radius:12px;transition:var(--ease)}
+.tst-list-item:hover{border-color:rgba(0,212,255,.2)}
+.tst-list-item-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;flex-wrap:wrap;gap:8px}
+
+/* ── Portfolio modal ── */
+#pf-modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.87);z-index:40000;align-items:center;justify-content:center;backdrop-filter:blur(8px)}
+#pf-modal.open{display:flex}
+.pf-modal-box{width:100%;max-width:700px;max-height:90vh;overflow-y:auto;background:var(--dark2);border:1px solid var(--glass-border);border-radius:20px;padding:40px;box-shadow:0 40px 120px rgba(0,0,0,.6)}
+.pf-modal-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:28px;padding-bottom:20px;border-bottom:1px solid var(--glass-border)}
+.pf-modal-ttl{font-family:var(--fhead);font-size:1.2rem;font-weight:700}
+.pf-modal-close{background:none;border:1px solid var(--glass-border);color:var(--text-secondary);font-size:1.1rem;cursor:pointer;padding:6px 12px;border-radius:8px;transition:var(--ease);line-height:1}
+.pf-modal-close:hover{color:var(--text-primary);border-color:rgba(0,212,255,.3)}
+
+/* ════ RESPONSIVE ════ */
+@media(max-width:1100px){
+  #pf-grid{grid-template-columns:repeat(6,1fr)}
+  .pf-item:nth-child(1){grid-column:span 6;grid-row:span 1;min-height:340px}
+  .pf-item:nth-child(2),.pf-item:nth-child(3){grid-column:span 3}
+  .pf-item:nth-child(n+4){grid-column:span 3}
+  .ft-top{grid-template-columns:1fr 1fr;gap:40px}
+  .adm-cards{grid-template-columns:repeat(2,1fr)}
+}
+@media(max-width:900px){
+  :root{--spad:80px}
+  .nav-links{display:none}
+  .nav-tog{display:flex}
+  .stat-grid{grid-template-columns:repeat(2,1fr)}
+  .abt-grid,.mv-grid,.ct-grid{grid-template-columns:1fr;gap:48px}
+  .adm-sidebar{width:250px}
+  .adm-section{padding:36px 40px}
+}
+@media(max-width:680px){
+  :root{--spad:60px}
+  .container{padding:0 20px}
+  .nav-in{padding:0 20px}
+  .ft-in{padding:0 20px}
+  #pf-grid{grid-template-columns:1fr}
+  .pf-item:nth-child(n){grid-column:span 1;min-height:220px}
+  .abt-feats{grid-template-columns:1fr}
+  .f-row{grid-template-columns:1fr}
+  .ft-top{grid-template-columns:1fr;gap:32px}
+  .ft-bot{flex-direction:column;text-align:center}
+  body{cursor:auto}
+  #cur,#cur-ring{display:none}
+  .adm-row,.adm-row3{grid-template-columns:1fr}
+  .adm-cards{grid-template-columns:1fr 1fr}
+  .adm-section{padding:24px 20px}
+  .adm-sidebar{width:220px}
+  .pf-modal-box{padding:24px;margin:16px}
+}
+</style>
+</head>
+<body>
+
+<div id="cur"></div>
+<div id="cur-ring"></div>
+
+<div id="loader">
+  <div class="ldr-logo">
+    <div class="ldr-f" id="ldrF"></div>
+    <div class="ldr-name">FRAME MEDIA</div>
+  </div>
+  <div style="display:flex;flex-direction:column;align-items:center;gap:12px">
+    <div class="ldr-bar"><div class="ldr-fill"></div></div>
+    <div class="ldr-pct" id="ldrPct">0%</div>
+  </div>
+</div>
+
+<div id="vid-modal">
+  <div class="vid-wrap">
+    <button class="vid-close" onclick="closeVideo()">✕</button>
+    <iframe id="vid-frame" allowfullscreen allow="autoplay"></iframe>
+  </div>
+</div>
+
+<div id="toast">✓ Saved successfully!</div>
+
+<div class="mob-nav" id="mobNav">
+  <button class="mob-close" onclick="closeMob()">✕</button>
+  <a href="#services" onclick="closeMob()">Services</a>
+  <a href="#portfolio" onclick="closeMob()">Portfolio</a>
+  <a href="#about" onclick="closeMob()">About</a>
+  <a href="#testimonials" onclick="closeMob()">Clients</a>
+  <a href="#contact" onclick="closeMob()">Contact</a>
+</div>
+
+<div id="pub-site">
+
+<nav id="navbar">
+  <div class="nav-in">
+    <a href="#" class="nav-logo">
+      <div class="nli" id="navLogo"></div>
+      <span class="nlt">FRAME MEDIA</span>
+    </a>
+    <ul class="nav-links">
+      <li><a href="#services">Services</a></li>
+      <li><a href="#portfolio">Portfolio</a></li>
+      <li><a href="#stats">Results</a></li>
+      <li><a href="#about">About</a></li>
+      <li><a href="#testimonials">Clients</a></li>
+      <li><a href="#contact" class="nav-cta">Contact Us</a></li>
+    </ul>
+    <button class="nav-tog" onclick="openMob()"><span></span><span></span><span></span></button>
+  </div>
+</nav>
+
+<section id="hero">
+  <canvas id="hero-canvas"></canvas>
+  <div class="h-grid"></div>
+  <div class="h-gL"></div>
+  <div class="h-gR"></div>
+  <div class="h-cnt">
+    <div class="h-eye" id="heroEyebrow">CREATIVE MEDIA STUDIO · CAIRO, EGYPT</div>
+    <h1 class="h-title" id="heroTitle">FRAME<br>MEDIA</h1>
+    <p class="h-sub" id="heroSubtitle">We Turn Ideas Into Cinematic Visual Experiences — Powered by AI, Crafted by Vision</p>
+    <div class="h-ctas">
+      <a href="#portfolio" class="btn-p">▶ View Portfolio</a>
+      <a href="#contact" class="btn-s">Contact Us →</a>
+    </div>
+    <div style="margin-top:28px;display:flex;align-items:center;justify-content:center;gap:20px;flex-wrap:wrap">
+      <a id="heroWA" href="https://wa.me/201032222089" class="btn-p" style="background:linear-gradient(135deg,#25D366,#128C7E);font-size:.82rem;padding:12px 24px" target="_blank">💬 WhatsApp: 01032222089</a>
+      <a id="heroPhone" href="tel:01032222089" class="btn-s" style="font-size:.82rem;padding:12px 24px">📞 01032222089</a>
+    </div>
+  </div>
+  <div class="h-scroll"><div class="h-line"></div><span>SCROLL</span></div>
+</section>
+
+<section id="services">
+  <div class="container">
+    <div class="sec-hdr rv">
+      <div class="sec-tag">What We Do</div>
+      <h2 class="sec-ttl">Premium <span>Creative Services</span></h2>
+      <p class="sec-desc">From AI-powered production to cinematic editing — we craft every frame with intention and excellence.</p>
+    </div>
+    <div class="srv-grid" id="srvGrid"></div>
+  </div>
+</section>
+
+<section id="portfolio">
+  <div class="container">
+    <div class="sec-hdr rv">
+      <div class="sec-tag">Our Work</div>
+      <h2 class="sec-ttl">Selected <span>Portfolio</span></h2>
+      <p class="sec-desc">A showcase of projects where vision met execution — spanning industries, formats, and possibilities.</p>
+    </div>
+    <div class="pf-filters rv" id="pfFilters"></div>
+    <div id="pf-grid" class="rv"></div>
+  </div>
+</section>
+
+<section id="stats">
+  <div class="container">
+    <div class="sec-hdr rv">
+      <div class="sec-tag">By The Numbers</div>
+      <h2 class="sec-ttl">Results That <span>Speak</span></h2>
+    </div>
+    <div class="stat-grid" id="statGrid"></div>
+  </div>
+</section>
+
+<section id="about">
+  <div class="container">
+    <div class="abt-grid">
+      <div class="abt-vis rvL">
+        <div class="abt-frame">
+          <div class="abt-fi"></div>
+          <div class="abt-fg"></div>
+          <div class="abt-fl">
+            <div class="abt-fgrid" id="abtFGrid"></div>
+            <div class="abt-ft">FRAME MEDIA</div>
+          </div>
+        </div>
+        <div class="abt-badge">
+          <div class="abt-bi">🎯</div>
+          <div>
+            <div class="abt-bn" id="abtBadgeNum">350+</div>
+            <div class="abt-bl">Projects Delivered</div>
+          </div>
+        </div>
+      </div>
+      <div class="rvR">
+        <div class="sec-tag">Our Story</div>
+        <h2 class="abt-ttl">Where Creativity Meets <span>Cinematic Excellence</span></h2>
+        <p class="abt-txt" id="abtText1">Frame Media was born from a shared obsession: the belief that every brand deserves a story told with the power and precision of cinema. We are a Cairo-based creative studio at the intersection of artistry and technology.</p>
+        <p class="abt-txt" id="abtText2">Over five years, we have partnered with brands across the Middle East and beyond, delivering visual content that doesn't just perform — it resonates, inspires, and endures.</p>
+        <div class="abt-feats">
+          <div class="abt-feat"><span>🤖</span><div class="abt-feat-txt">AI-Powered Production</div></div>
+          <div class="abt-feat"><span>🎨</span><div class="abt-feat-txt">World-Class Creative Team</div></div>
+          <div class="abt-feat"><span>⚡</span><div class="abt-feat-txt">Fast Turnaround</div></div>
+          <div class="abt-feat"><span>🌍</span><div class="abt-feat-txt">Middle East Specialists</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="mission">
+  <div class="container">
+    <div class="sec-hdr rv">
+      <div class="sec-tag">Our Purpose</div>
+      <h2 class="sec-ttl">Mission &amp; <span>Vision</span></h2>
+    </div>
+    <div class="mv-grid">
+      <div class="mv-card msn rvL" data-d="2">
+        <div class="mv-type">MISSION</div>
+        <span class="mv-ico">🚀</span>
+        <h3 class="mv-ttl">What We Stand For</h3>
+        <p class="mv-txt" id="missionText">To create visually unforgettable content that elevates brands through cinematic storytelling and modern AI-powered production. Every project we undertake is a commitment to excellence, authenticity, and impact.</p>
+      </div>
+      <div class="mv-card vsn rvR" data-d="3">
+        <div class="mv-type">VISION</div>
+        <span class="mv-ico">🔭</span>
+        <h3 class="mv-ttl">Where We Are Going</h3>
+        <p class="mv-txt" id="visionText">To become one of the leading creative media studios in the Middle East, specialising in futuristic visual experiences that bridge human emotion with the limitless possibilities of technology and imagination.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="testimonials">
+  <div class="container">
+    <div class="sec-hdr rv">
+      <div class="sec-tag">Client Love</div>
+      <h2 class="sec-ttl">What Our <span>Clients Say</span></h2>
+    </div>
+  </div>
+  <div class="tst-outer rv">
+    <div class="tst-track" id="tstTrack"></div>
+  </div>
+</section>
+
+<section id="contact">
+  <div class="container">
+    <div class="sec-hdr rv">
+      <div class="sec-tag">Get In Touch</div>
+      <h2 class="sec-ttl">Let's Create <span>Something Epic</span></h2>
+    </div>
+    <div class="ct-grid">
+      <div class="rvL">
+        <h3 class="ct-ttl">Ready to tell your <span>brand story</span>?</h3>
+        <p class="ct-p">Whether you have a clear vision or just a spark of an idea, we'd love to hear from you. Let's build something cinematic together.</p>
+        <div class="ct-chs">
+          <a id="ctWA" href="https://wa.me/201032222089" class="ct-ch" target="_blank">
+            <div class="ct-ch-ico">💬</div>
+            <div><div class="ct-ch-lbl">WhatsApp</div><div class="ct-ch-val" id="ctWhatsapp">01032222089</div></div>
+          </a>
+          <a id="ctPhoneLink" href="tel:01032222089" class="ct-ch">
+            <div class="ct-ch-ico">📞</div>
+            <div><div class="ct-ch-lbl">Phone</div><div class="ct-ch-val" id="ctPhone">01032222089</div></div>
+          </a>
+          <a id="ctEmailLink" href="mailto:hello@framemedia.co" class="ct-ch">
+            <div class="ct-ch-ico">📧</div>
+            <div><div class="ct-ch-lbl">Email</div><div class="ct-ch-val" id="ctEmail">hello@framemedia.co</div></div>
+          </a>
+          <div class="ct-ch">
+            <div class="ct-ch-ico">📍</div>
+            <div><div class="ct-ch-lbl">Location</div><div class="ct-ch-val" id="ctLocation">Cairo, Egypt</div></div>
+          </div>
+        </div>
+        <div class="soc-links" id="socLinks"></div>
+        <div class="map-ph" style="margin-top:24px">
+          <div class="map-g"></div>
+          <div class="map-pin">📍</div>
+          <div class="map-txt">Cairo, Egypt — Google Maps</div>
+        </div>
+      </div>
+      <div class="ct-form rvR">
+        <div class="f-row">
+          <div class="fg"><label>First Name</label><input type="text" placeholder="Ahmed"></div>
+          <div class="fg"><label>Last Name</label><input type="text" placeholder="Hassan"></div>
+        </div>
+        <div class="fg"><label>Email</label><input type="email" placeholder="your@email.com"></div>
+        <div class="fg"><label>Phone / WhatsApp</label><input type="tel" placeholder="01032222089"></div>
+        <div class="fg">
+          <label>Service</label>
+          <select>
+            <option>Select a service...</option>
+            <option>AI Video Production</option><option>Commercial Ads</option>
+            <option>Social Media Content</option><option>Product Visualization</option>
+            <option>Motion Graphics</option><option>Brand Identity Videos</option>
+            <option>Reels &amp; Shorts</option><option>Cinematic Editing</option>
+            <option>VFX &amp; CGI</option>
+          </select>
+        </div>
+        <div class="fg"><label>Message</label><textarea placeholder="Tell us about your project, budget, and timeline..."></textarea></div>
+        <button class="f-submit" onclick="submitForm(this)">Send Message ✦</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="ft-in">
+    <div class="ft-top">
+      <div>
+        <div class="ft-logo">
+          <div class="ft-li" id="ftLogo"></div>
+          <span class="ft-lt">FRAME MEDIA</span>
+        </div>
+        <p class="ft-tgl">We turn ideas into cinematic visual experiences — powered by AI, crafted by vision.</p>
+        <div style="font-family:var(--fhead);font-size:.82rem;color:var(--text-muted);margin-bottom:16px">📞 <span id="ftPhone">01032222089</span></div>
+        <div class="soc-links" id="socLinks2"></div>
+      </div>
+      <div>
+        <div class="ft-col-ttl">Services</div>
+        <ul class="ft-links">
+          <li><a href="#services">AI Video Production</a></li>
+          <li><a href="#services">Commercial Ads</a></li>
+          <li><a href="#services">Motion Graphics</a></li>
+          <li><a href="#services">VFX &amp; CGI</a></li>
+          <li><a href="#services">Reels &amp; Shorts</a></li>
+        </ul>
+      </div>
+      <div>
+        <div class="ft-col-ttl">Portfolio</div>
+        <ul class="ft-links">
+          <li><a href="#portfolio">Commercials</a></li>
+          <li><a href="#portfolio">Medical Videos</a></li>
+          <li><a href="#portfolio">Real Estate</a></li>
+          <li><a href="#portfolio">Automotive</a></li>
+          <li><a href="#portfolio">CGI &amp; VFX</a></li>
+        </ul>
+      </div>
+      <div>
+        <div class="ft-col-ttl">Company</div>
+        <ul class="ft-links">
+          <li><a href="#about">About Us</a></li>
+          <li><a href="#mission">Mission &amp; Vision</a></li>
+          <li><a href="#testimonials">Client Stories</a></li>
+          <li><a href="#contact">Contact</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="ft-bot">
+      <div class="ft-copy">© 2025–2026 <span>Frame Media</span>. All rights reserved.</div>
+      <ul class="ft-blinks">
+        <li><a href="#">Privacy Policy</a></li>
+        <li><a href="#">Terms</a></li>
+      </ul>
+    </div>
+  </div>
+</footer>
+<a class="wa-float" id="waFloat" href="https://wa.me/201032222089" target="_blank" title="WhatsApp: 01032222089">💬</a>
+
+</div><div id="adm-wrap">
+
+  <div id="adm-login">
+    <div class="adm-login-box">
+      <div class="adm-login-logo">
+        <div class="lf" id="admLoginLogo"></div>
+        <div class="ln">FRAME MEDIA</div>
+      </div>
+      <h2>Admin Dashboard</h2>
+      <p>Enter your credentials to manage website content</p>
+      <input class="adm-inp" id="admUser" type="text" placeholder="Username" onkeydown="if(event.key==='Enter')adminLogin()">
+      <input class="adm-inp" id="admPass" type="password" placeholder="Password" onkeydown="if(event.key==='Enter')adminLogin()">
+      <button class="adm-btn-login" onclick="adminLogin()">Enter Dashboard →</button>
+      <div id="adm-err"></div>
+      <div class="adm-hint">
+        🔐 Default: <strong>admin</strong> / <strong>frame2026</strong><br>
+        <small>Change in JS — search ADMIN_CREDENTIALS</small>
+      </div>
+    </div>
+  </div>
+
+  <div id="adm-dash">
+    <div class="adm-sidebar">
+      <div class="adm-sb-logo">
+        <div class="sli" id="admSbLogo"></div>
+        <div>
+          <div class="slt">FRAME</div>
+          <div class="adm-sb-subtitle">ADMIN</div>
+        </div>
+      </div>
+      <div class="adm-nav">
+        <div class="adm-nav-sep">Main</div>
+        <button class="adm-nav-btn on" onclick="admNav('overview')">📊 <span>Overview</span></button>
+        <button class="adm-nav-btn" onclick="admNav('portfolio')">🎬 <span>Portfolio</span></button>
+        <div class="adm-nav-sep">Content</div>
+        <button class="adm-nav-btn" onclick="admNav('hero')">🦸 <span>Hero</span></button>
+        <button class="adm-nav-btn" onclick="admNav('services')">✨ <span>Services</span></button>
+        <button class="adm-nav-btn" onclick="admNav('stats')">📈 <span>Stats</span></button>
+        <button class="adm-nav-btn" onclick="admNav('mission')">🎯 <span>Mission / Vision</span></button>
+        <button class="adm-nav-btn" onclick="admNav('about')">📖 <span>About</span></button>
+        <button class="adm-nav-btn" onclick="admNav('testimonials')">💬 <span>Testimonials</span></button>
+        <div class="adm-nav-sep">Settings</div>
+        <button class="adm-nav-btn" onclick="admNav('contact')">📞 <span>Contact Info</span></button>
+        <button class="adm-nav-btn" onclick="admNav('social')">🔗 <span>Social Links</span></button>
+      </div>
+      <div class="adm-sb-footer">
+        <button class="adm-preview-btn" onclick="previewSite()">👁 <span>Preview Site</span></button>
+        <button class="adm-logout-btn" onclick="adminLogout()">🚪 <span>Logout</span></button>
+      </div>
+    </div>
+
+    <div class="adm-main">
+
+      <div class="adm-section on" id="sec-overview">
+        <div class="adm-section-hdr">
+          <h2 class="adm-section-ttl">Dashboard <span>Overview</span></h2>
+          <div class="adm-badge-cyan">Admin Panel v2.0</div>
+        </div>
+        <div class="adm-cards" id="ovCards"></div>
+        <div class="adm-info">
+          🔐 <strong>Admin Access:</strong> This panel is accessible at <code style="background:rgba(0,212,255,.1);padding:2px 6px;border-radius:4px">#admin</code> — not visible to normal visitors.<br>
+          All changes save to browser storage (localStorage) and appear instantly on the public site.<br>
+          💡 To change credentials: search <code style="background:rgba(0,212,255,.1);padding:2px 6px;border-radius:4px">ADMIN_CREDENTIALS</code> in the HTML file source.
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+          <div class="adm-card" style="cursor:pointer" onclick="admNav('portfolio')">
+            <div style="font-size:2rem;margin-bottom:8px">🎬</div>
+            <div class="adm-card-l" style="font-size:.9rem;color:var(--text-secondary)">Manage portfolio items, add videos, update thumbnails</div>
+          </div>
+          <div class="adm-card" style="cursor:pointer" onclick="admNav('hero')">
+            <div style="font-size:2rem;margin-bottom:8px">✏️</div>
+            <div class="adm-card-l" style="font-size:.9rem;color:var(--text-secondary)">Edit hero text, services, mission, vision, about</div>
+          </div>
+          <div class="adm-card" style="cursor:pointer" onclick="admNav('stats')">
+            <div style="font-size:2rem;margin-bottom:8px">📈</div>
+            <div class="adm-card-l" style="font-size:.9rem;color:var(--text-secondary)">Update counters: clients, projects, satisfaction rate</div>
+          </div>
+          <div class="adm-card" style="cursor:pointer" onclick="admNav('contact')">
+            <div style="font-size:2rem;margin-bottom:8px">📞</div>
+            <div class="adm-card-l" style="font-size:.9rem;color:var(--text-secondary)">Update phone, WhatsApp, email, location</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="adm-section" id="sec-portfolio">
+        <div class="adm-section-hdr">
+          <h2 class="adm-section-ttl">Portfolio <span>Manager</span></h2>
+          <button class="adm-btn primary" onclick="openPfModal()">+ Add Project</button>
+        </div>
+        <div class="adm-info">Drag & drop not required — use the ↑ ↓ arrows to reorder. Each item supports YouTube, Vimeo, or Google Drive video links.</div>
+        <div class="pf-list" id="admPfList"></div>
+      </div>
+
+      <div class="adm-section" id="sec-hero">
+        <div class="adm-section-hdr">
+          <h2 class="adm-section-ttl">Hero <span>Section</span></h2>
+          <button class="adm-btn primary" onclick="saveHero()">Save Hero</button>
+        </div>
+        <div class="adm-fg"><label class="adm-label">Eyebrow Text (small top label)</label><input class="adm-field" id="fHeroEye" placeholder="CREATIVE MEDIA STUDIO · CAIRO, EGYPT"></div>
+        <div class="adm-fg"><label class="adm-label">Main Title</label><input class="adm-field" id="fHeroTitle" placeholder="FRAME MEDIA"></div>
+        <div class="adm-fg"><label class="adm-label">Subtitle</label><textarea class="adm-field" id="fHeroSub" rows="3" placeholder="We Turn Ideas Into Cinematic Visual Experiences"></textarea></div>
+        <button class="adm-btn primary" onclick="saveHero()">💾 Save Hero Content</button>
+      </div>
+
+      <div class="adm-section" id="sec-services">
+        <div class="adm-section-hdr">
+          <h2 class="adm-section-ttl">Services <span>Editor</span></h2>
+          <button class="adm-btn primary" onclick="saveServices()">Save All Services</button>
+        </div>
+        <div class="adm-info">Edit the 9 service cards. Each has an icon (emoji), name, and description.</div>
+        <div id="admSrvList"></div>
+        <button class="adm-btn primary" onclick="saveServices()">💾 Save Services</button>
+      </div>
+
+      <div class="adm-section" id="sec-stats">
+        <div class="adm-section-hdr">
+          <h2 class="adm-section-ttl">Stats <span>/ Counters</span></h2>
+          <button class="adm-btn primary" onclick="saveStats()">Save Stats</button>
+        </div>
+        <div id="admStatList"></div>
+        <button class="adm-btn primary" onclick="saveStats()">💾 Save Counters</button>
+      </div>
+
+      <div class="adm-section" id="sec-mission">
+        <div class="adm-section-hdr">
+          <h2 class="adm-section-ttl">Mission &amp; <span>Vision</span></h2>
+          <button class="adm-btn primary" onclick="saveMV()">Save</button>
+        </div>
+        <div class="adm-fg"><label class="adm-label">Mission Text</label><textarea class="adm-field" id="fMission" rows="4"></textarea></div>
+        <div class="adm-fg"><label class="adm-label">Vision Text</label><textarea class="adm-field" id="fVision" rows="4"></textarea></div>
+        <button class="adm-btn primary" onclick="saveMV()">💾 Save Mission &amp; Vision</button>
+      </div>
+
+      <div class="adm-section" id="sec-about">
+        <div class="adm-section-hdr">
+          <h2 class="adm-section-ttl">About <span>Section</span></h2>
+          <button class="adm-btn primary" onclick="saveAbout()">Save</button>
+        </div>
+        <div class="adm-fg"><label class="adm-label">Paragraph 1</label><textarea class="adm-field" id="fAbt1" rows="4"></textarea></div>
+        <div class="adm-fg"><label class="adm-label">Paragraph 2</label><textarea class="adm-field" id="fAbt2" rows="4"></textarea></div>
+        <button class="adm-btn primary" onclick="saveAbout()">💾 Save About</button>
+      </div>
+
+      <div class="adm-section" id="sec-testimonials">
+        <div class="adm-section-hdr">
+          <h2 class="adm-section-ttl">Testimonials <span>Manager</span></h2>
+          <button class="adm-btn primary" onclick="addTestimonial()">+ Add Testimonial</button>
+        </div>
+        <div class="tst-list" id="admTstList"></div>
+      </div>
+
+      <div class="adm-section" id="sec-contact">
+        <div class="adm-section-hdr">
+          <h2 class="adm-section-ttl">Contact <span>Information</span></h2>
+          <button class="adm-btn primary" onclick="saveContact()">Save</button>
+        </div>
+        <div class="adm-info">⚡ Updating phone/WhatsApp will automatically update the floating WhatsApp button, hero section, contact section, and footer.</div>
+        <div class="adm-row">
+          <div class="adm-fg"><label class="adm-label">Phone Number (displayed)</label><input class="adm-field" id="fPhone" placeholder="01032222089"></div>
+          <div class="adm-fg"><label class="adm-label">WhatsApp Number (+country code)</label><input class="adm-field" id="fWA" placeholder="+201032222089"></div>
+        </div>
+        <div class="adm-fg"><label class="adm-label">Email Address</label><input class="adm-field" id="fEmail" type="email" placeholder="hello@framemedia.co"></div>
+        <div class="adm-fg"><label class="adm-label">Location</label><input class="adm-field" id="fLocation" placeholder="Cairo, Egypt"></div>
+        <button class="adm-btn primary" onclick="saveContact()">💾 Save Contact Info</button>
+      </div>
+
+      <div class="adm-section" id="sec-social">
+        <div class="adm-section-hdr">
+          <h2 class="adm-section-ttl">Social <span>Media Links</span></h2>
+          <button class="adm-btn primary" onclick="saveSocial()">Save</button>
+        </div>
+        <div class="adm-row">
+          <div class="adm-fg"><label class="adm-label">📸 Instagram URL</label><input class="adm-field" id="fIG" placeholder="https://instagram.com/framemedia"></div>
+          <div class="adm-fg"><label class="adm-label">🎵 TikTok URL</label><input class="adm-field" id="fTT" placeholder="https://tiktok.com/@framemedia"></div>
+        </div>
+        <div class="adm-row">
+          <div class="adm-fg"><label class="adm-label">▶️ YouTube URL</label><input class="adm-field" id="fYT" placeholder="https://youtube.com/@framemedia"></div>
+          <div class="adm-fg"><label class="adm-label">💼 LinkedIn URL</label><input class="adm-field" id="fLI" placeholder="https://linkedin.com/company/framemedia"></div>
+        </div>
+        <div class="adm-fg"><label class="adm-label">🎨 Behance URL</label><input class="adm-field" id="fBE" placeholder="https://behance.net/framemedia"></div>
+        <button class="adm-btn primary" onclick="saveSocial()">💾 Save Social Links</button>
+      </div>
+
+    </div></div><div id="pf-modal">
+    <div class="pf-modal-box">
+      <div class="pf-modal-hdr">
+        <div class="pf-modal-ttl" id="pfModalTitle">Add Portfolio Item</div>
+        <button class="pf-modal-close" onclick="closePfModal()">✕</button>
+      </div>
+      <input type="hidden" id="pfEditId">
+      <div class="adm-row">
+        <div class="adm-fg"><label class="adm-label">Project Title *</label><input class="adm-field" id="pfTitle" placeholder="e.g. Luxury Car Launch"></div>
+        <div class="adm-fg">
+          <label class="adm-label">Category *</label>
+          <select class="adm-field" id="pfCat">
+            <option value="commercial">Commercials</option>
+            <option value="medical">Medical Videos</option>
+            <option value="realestate">Real Estate</option>
+            <option value="auto">Automotive</option>
+            <option value="social">Social Media</option>
+            <option value="cgi">CGI &amp; VFX</option>
+          </select>
+        </div>
+      </div>
+      <div class="adm-fg"><label class="adm-label">Description</label><textarea class="adm-field" id="pfDesc" rows="2" placeholder="Brief project description..."></textarea></div>
+      <div class="adm-divider"></div>
+      <div class="adm-fg">
+        <label class="adm-label">🎬 Video URL (YouTube / Vimeo / Google Drive)</label>
+        <input class="adm-field" id="pfVideo" placeholder="https://youtu.be/... or https://vimeo.com/...">
+        <small style="color:var(--text-muted);font-size:.72rem;margin-top:4px;display:block">Supports: YouTube, Vimeo, Google Drive, or any direct video URL</small>
+      </div>
+      <div class="adm-row">
+        <div class="adm-fg">
+          <label class="adm-label">🖼️ Thumbnail Image URL</label>
+          <input class="adm-field" id="pfThumbUrl" placeholder="https://... or leave blank for color">
+        </div>
+        <div class="adm-fg">
+          <label class="adm-label">OR Upload Thumbnail</label>
+          <input type="file" accept="image/*" id="pfThumbFile" class="adm-field" style="padding:8px" onchange="handleThumbUpload(this)">
+        </div>
+      </div>
+      <div class="adm-fg">
+        <label class="adm-label">Accent Color (for placeholder background)</label>
+        <select class="adm-field" id="pfColor">
+          <option value="rgba(0,212,255,0.3)">Cyan</option>
+          <option value="rgba(139,92,246,0.3)">Violet</option>
+          <option value="rgba(59,130,246,0.3)">Blue</option>
+          <option value="rgba(192,38,211,0.3)">Magenta</option>
+          <option value="rgba(16,185,129,0.25)">Emerald</option>
+        </select>
+      </div>
+      <div class="adm-fg" style="display:flex;align-items:center;gap:12px">
+        <input type="checkbox" id="pfFeatured" style="width:18px;height:18px">
+        <label for="pfFeatured" style="font-family:var(--fhead);font-size:.85rem;cursor:pointer">⭐ Featured Project (shown first, larger)</label>
+      </div>
+      <input type="hidden" id="pfThumbData">
+      <div class="adm-btn-grp" style="margin-top:8px">
+        <button class="adm-btn primary" onclick="savePfItem()">💾 Save Project</button>
+        <button class="adm-btn secondary" onclick="closePfModal()">Cancel</button>
+      </div>
+    </div>
+  </div>
+
+</div><script>
+/* ════════════════════════════════════════════
+   ADMIN CREDENTIALS — CHANGE THESE TWO LINES
+════════════════════════════════════════════ */
+const ADMIN_CREDENTIALS = {
+  username: 'admin',      // ← Change your username here
+  password: 'frame2026'   // ← Change your password here
+};
+/* ════════════════════════════════════════════ */
+
+/* ── DEFAULT CONTENT ── */
+const DEFAULT = {
+  hero: {
+    eyebrow: 'CREATIVE MEDIA STUDIO · CAIRO, EGYPT',
+    title: 'FRAME MEDIA',
+    subtitle: 'We Turn Ideas Into Cinematic Visual Experiences — Powered by AI, Crafted by Vision'
+  },
+  contact: {
+    phone: '01032222089',
+    whatsapp: '+201032222089',
+    email: 'hello@framemedia.co',
+    location: 'Cairo, Egypt'
+  },
+  social: {
+    instagram: '#', tiktok: '#', youtube: '#', linkedin: '#', behance: '#'
+  },
+  stats: [
+    { icon:'🏆', value:120, suffix:'+', label:'Clients Served' },
+    { icon:'😊', value:98, suffix:'%', label:'Happy Clients' },
+    { icon:'🎬', value:350, suffix:'+', label:'Projects Completed' },
+    { icon:'⭐', value:5, suffix:'', label:'Years of Excellence' }
+  ],
+  mission: 'To create visually unforgettable content that elevates brands through cinematic storytelling and modern AI-powered production. Every project we undertake is a commitment to excellence, authenticity, and impact.',
+  vision: 'To become one of the leading creative media studios in the Middle East, specialising in futuristic visual experiences that bridge human emotion with the limitless possibilities of technology and imagination.',
+  about: {
+    p1: "Frame Media was born from a shared obsession: the belief that every brand deserves a story told with the power and precision of cinema. We are a Cairo-based creative studio at the intersection of artistry and technology.",
+    p2: "Over five years, we have partnered with brands across the Middle East and beyond, delivering visual content that doesn't just perform — it resonates, inspires, and endures."
+  },
+  services: [
+    { icon:'🤖', name:'AI Video Production', desc:'Next-generation production powered by artificial intelligence tools that elevate storytelling beyond traditional limits.' },
+    { icon:'📺', name:'Commercial Ads', desc:'High-impact commercial spots that captivate audiences and drive measurable brand performance.' },
+    { icon:'📱', name:'Social Media Content', desc:'Scroll-stopping content engineered for every platform — built to grow communities and drive engagement.' },
+    { icon:'🏛️', name:'Product Visualization', desc:'Photorealistic 3D product renders and animations that make every detail shine before production begins.' },
+    { icon:'✨', name:'Motion Graphics', desc:'Fluid, purposeful motion design that transforms complex messages into beautifully animated visual narratives.' },
+    { icon:'🎬', name:'Brand Identity Videos', desc:'Cinematic brand films that capture the soul of your company and leave an unforgettable impression.' },
+    { icon:'🎞️', name:'Reels & Shorts', desc:'Vertical-format short-form video optimised for Instagram, TikTok, and YouTube Shorts algorithms.' },
+    { icon:'🎭', name:'Cinematic Editing', desc:'Post-production mastery — color grading, sound design, and rhythm that transform raw footage into art.' },
+    { icon:'🌌', name:'VFX & CGI', desc:'World-class visual effects and computer-generated imagery that push the boundaries of visual reality.' }
+  ],
+  portfolio: [
+    { id:'pf1', title:'Brand Launch – Luxury Fashion Collection', cat:'commercial', desc:'A cinematic fashion brand launch shot across Cairo.', color:'rgba(0,212,255,0.3)', video:'', thumb:'', featured:true },
+    { id:'pf2', title:'Hospital Campaign', cat:'medical', desc:'A professional healthcare brand campaign.', color:'rgba(139,92,246,0.3)', video:'', thumb:'', featured:false },
+    { id:'pf3', title:'Luxury Tower Reveal', cat:'realestate', desc:'A cinematic real estate reveal video.', color:'rgba(59,130,246,0.3)', video:'', thumb:'', featured:false },
+    { id:'pf4', title:'Electric SUV Launch', cat:'auto', desc:'High-energy automotive commercial.', color:'rgba(192,38,211,0.3)', video:'', thumb:'', featured:false },
+    { id:'pf5', title:'Viral Reel Series', cat:'social', desc:'Social media content series.', color:'rgba(0,212,255,0.2)', video:'', thumb:'', featured:false },
+    { id:'pf6', title:'Product Universe CGI', cat:'cgi', desc:'World-class CGI product visualization.', color:'rgba(109,40,217,0.3)', video:'', thumb:'', featured:false }
+  ],
+  testimonials: [
+    { name:'Sara Al-Rashidi', role:'CMO · TechVision Egypt', text:'Frame Media completely transformed how our brand is perceived. Their cinematic approach to our product launch video generated over 2M views in the first week.', initials:'SR' },
+    { name:'Karim Essam', role:'CEO · Luxe Real Estate', text:'Exceptional quality, on time, and the team truly understood our vision. The CGI work was indistinguishable from reality. We were blown away.', initials:'KE' },
+    { name:'Nour Ibrahim', role:'Marketing Director · HealthPlus', text:'The social media content Frame produced tripled our engagement rate within a month. Their creativity and technical execution are unmatched in the region.', initials:'NI' },
+    { name:'Mahmoud Shalaby', role:'Brand Manager · AutoCore', text:'Working with Frame Media felt like working with a Hollywood studio. The attention to detail in our automotive ad was extraordinary.', initials:'MS' },
+    { name:'Dr. Aisha Farouk', role:'Head of Communications · MedGroup', text:'Our medical explainer videos from Frame Media have been used in hospitals across Egypt. The clarity and quality are remarkable.', initials:'AF' },
+    { name:'Omar Al-Tayeb', role:'Founder · Heritage Foods', text:'They delivered a brand identity film that captured 10 years of our company\'s soul in just 90 seconds. Pure artistry.', initials:'OT' },
+    { name:'Rania Hassan', role:'CEO · Bloom Cosmetics', text:'The ROI from our Frame Media commercial exceeded our expectations by 3x. This is the best marketing investment we have ever made.', initials:'RH' }
+  ]
+};
+
+/* ── LOAD CONTENT ── */
+let C = (() => {
+  try {
+    const saved = localStorage.getItem('fm_content_v2');
+    return saved ? JSON.parse(saved) : JSON.parse(JSON.stringify(DEFAULT));
+  } catch(e) { return JSON.parse(JSON.stringify(DEFAULT)); }
+})();
+
+function saveC() {
+  localStorage.setItem('fm_content_v2', JSON.stringify(C));
+}
+
+/* ── LOGO BUILDERS ── */
+function buildLogo(el, size=4) {
+  if(!el) return;
+  const pat = [1,1,1,1, 1,0,0,0, 1,1,1,0, 1,0,0,0];
+  el.innerHTML = '';
+  pat.forEach(v => {
+    const d = document.createElement('div');
+    d.className = 'd' + (v ? '' : ' off');
+    el.appendChild(d);
+  });
+}
+function buildLoaderF(el) {
+  if(!el) return;
+  const pat = [1,1,1,1,1,1, 1,0,0,0,0,0, 1,1,1,1,0,0, 1,0,0,0,0,0, 1,0,0,0,0,0, 1,0,0,0,0,0];
+  el.innerHTML = '';
+  pat.forEach(v => {
+    const d = document.createElement('div');
+    d.className = 'd';
+    if(!v) d.style.background = 'transparent';
+    el.appendChild(d);
+  });
+}
+function buildAboutF() {
+  const el = document.getElementById('abtFGrid');
+  if(!el) return;
+  const pat = [1,1,1,1,1,1, 1,0,0,0,0,0, 1,1,1,1,0,0, 1,0,0,0,0,0, 1,0,0,0,0,0, 1,0,0,0,0,0];
+  el.innerHTML = '';
+  pat.forEach(v => {
+    const d = document.createElement('div');
+    d.className = 'd';
+    if(!v) d.style.background = 'transparent';
+    el.appendChild(d);
+  });
+}
+
+/* ── LOADER ── */
+(function() {
+  buildLoaderF(document.getElementById('ldrF'));
+  const pct = document.getElementById('ldrPct');
+  let p = 0;
+  const iv = setInterval(() => {
+    p = Math.min(p + Math.random() * 8, 100);
+    if(pct) pct.textContent = Math.floor(p) + '%';
+    if(p >= 100) {
+      clearInterval(iv);
+      setTimeout(() => {
+        const l = document.getElementById('loader');
+        if(l) { l.classList.add('gone'); setTimeout(() => l.remove(), 800); }
+      }, 400);
+    }
+  }, 60);
+})();
+
+/* ============================================================
+   1. parseVideo — تحويل أي رابط إلى embed URL صحيح
+   ============================================================ */
+function parseVideo(url) {
+  if (!url || !url.trim()) return null;
+  const u = url.trim();
+
+  // YouTube — watch, shorts, youtu.be, embed
+  let m = u.match(/(?:youtube\.com\/(?:watch\?(?:.*&)?v=|shorts\/|embed\/)|youtu\.be\/)([a-zA-Z0-9_-]{11})/);
+  if (m) return 'https://www.youtube.com/embed/' + m[1] + '?autoplay=1&rel=0';
+
+  // Vimeo
+  m = u.match(/vimeo\.com\/(?:video\/)?(\d+)/);
+  if (m) return 'https://player.vimeo.com/video/' + m[1] + '?autoplay=1';
+
+  // Google Drive
+  m = u.match(/drive\.google\.com\/file\/d\/([a-zA-Z0-9_-]+)/);
+  if (m) return 'https://drive.google.com/file/d/' + m[1] + '/preview';
+
+  m = u.match(/drive\.google\.com\/.*[?&]id=([a-zA-Z0-9_-]+)/);
+  if (m) return 'https://drive.google.com/file/d/' + m[1] + '/preview';
+
+  if (/^https?:\/\/.+/.test(u)) return u;
+
+  return null;
+}
+
+/* ============================================================
+   2. openVideo — فتح الـ Modal وتحميل الـ iframe بأمان
+   ============================================================ */
+function openVideo(url) {
+  const embed = parseVideo(url);
+  if (!embed) {
+    console.warn('Frame Media: رابط فيديو غير صالح →', url);
+    return;
+  }
+  const modal = document.getElementById('vid-modal');
+  const frame = document.getElementById('vid-frame');
+  frame.setAttribute('allow', 'autoplay; fullscreen; encrypted-media; picture-in-picture');
+  frame.setAttribute('allowfullscreen', '');
+  frame.src = embed;
+  modal.classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+/* ============================================================
+   3. closeVideo — إغلاق نظيف مع وقف التشغيل فوراً
+   ============================================================ */
+function closeVideo() {
+  const modal = document.getElementById('vid-modal');
+  const frame = document.getElementById('vid-frame');
+  frame.src = '';
+  modal.classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+// إغلاق بالضغط على خلفية الـ Modal
+document.getElementById('vid-modal').addEventListener('click', function (e) {
+  if (e.target === this) closeVideo();
+});
+
+// إغلاق بـ Escape
+document.addEventListener('keydown', function (e) {
+  if (e.key === 'Escape') closeVideo();
+});
+
+/* ============================================================
+   4. renderPortfolio — تثبيت الـ Events والمؤشر بشكل نهائي
+   ============================================================ */
+function renderPortfolio() {
+  const filters = document.getElementById('pfFilters');
+  const grid = document.getElementById('pf-grid');
+  if (!grid) return;
+
+  const cats = ['all','commercial','medical','realestate','auto','social','cgi'];
+  const catLabels = {'all':'All Work','commercial':'Commercials','medical':'Medical','realestate':'Real Estate','auto':'Automotive','social':'Social Media','cgi':'CGI & VFX'};
+
+  if (filters) {
+    filters.innerHTML = cats.map(c =>
+      '<button class="pf-flt ' + (c==='all'?'on':'') + '" onclick="filterPf(this,\'' + c + '\')">' + catLabels[c] + '</button>'
+    ).join('');
+  }
+
+  grid.innerHTML = '';
+  const items = [...(C.portfolio || [])].sort((a,b) => (b.featured?1:0)-(a.featured?1:0));
+
+  items.forEach(function(item, i) {
+    const hasVideo = !!(item.video && item.video.trim());
+    const hasThumb = !!(item.thumb && item.thumb.trim());
+    const videoUrl  = hasVideo ? item.video.trim() : '';
+
+    const div = document.createElement('div');
+    div.className = 'pf-item rv';
+    div.dataset.cat = item.cat;
+
+    if (i === 0) {
+      div.style.gridColumn = 'span 8';
+      div.style.gridRowStart = 'span 2';
+      div.style.minHeight = '500px';
+    } else if (i < 3) {
+      div.style.gridColumn = 'span 4';
+      div.style.minHeight = '240px';
+    } else {
+      div.style.gridColumn = 'span 4';
+      div.style.minHeight = '280px';
+    }
+
+    var thumbStyle = hasThumb
+      ? 'style="background-image:url(\'' + item.thumb + '\');background-size:cover;background-position:center"'
+      : '';
+    var thumbBg = !hasThumb
+      ? '<div class="pf-thumb-bg" style="background:' + (item.color||'rgba(0,212,255,0.25)') + ';position:absolute;inset:0"></div>'
+      : '';
+    
+    // تمكين الأحداث والكبح لخصائص كسر الماوس هنا
+    var playBtn = hasVideo
+      ? '<button class="pf-play" type="button" aria-label="تشغيل الفيديو">▶</button>'
+      : '<div class="pf-play" style="opacity:0.3;cursor:default">▶</div>';
+    
+    var descHtml = item.desc
+      ? '<div style="font-size:.78rem;color:var(--text-secondary);margin-top:4px">' + item.desc + '</div>'
+      : '';
+
+    div.innerHTML =
+      '<div class="pf-thumb" ' + thumbStyle + '>' +
+        thumbBg +
+        '<div class="pf-pattern"></div>' +
+        playBtn +
+        '<div class="pf-ov"><div>' +
+          '<div class="pf-cat">' + (catLabels[item.cat]||item.cat) + (item.featured?' · ⭐ Featured':'') + '</div>' +
+          '<div class="pf-title">' + item.title + '</div>' +
+          descHtml +
+        '</div></div>' +
+      '</div>';
+
+    // ربط مستقر كلياً لتشغيل الفيديوهات عند الضغط
+    if (hasVideo) {
+      div.querySelector('.pf-play').addEventListener('click', function(e) {
+        e.stopPropagation();
+        openVideo(videoUrl);
+      });
+      // تفعيل الضغط على الكارت بالكامل لسهولة العرض للمستخدم
+      div.addEventListener('click', function() {
+        openVideo(videoUrl);
+      });
+    }
+
+    grid.appendChild(div);
+  });
+
+  initReveal();
+}
+
+/* ── RENDER PUBLIC SITE ── */
+function renderAll() {
+  renderHero();
+  renderServices();
+  renderPortfolio();
+  renderStats();
+  renderTestimonials();
+  renderContact();
+  renderSocial();
+  const a1 = document.getElementById('abtText1'); if(a1) a1.textContent = C.about.p1;
+  const a2 = document.getElementById('abtText2'); if(a2) a2.textContent = C.about.p2;
+  const mt = document.getElementById('missionText'); if(mt) mt.textContent = C.mission;
+  const vt = document.getElementById('visionText'); if(vt) vt.textContent = C.vision;
+}
+
+function renderHero() {
+  const e1 = document.getElementById('heroEyebrow'); if(e1) e1.lastChild.textContent = ' ' + (C.hero.eyebrow || DEFAULT.hero.eyebrow);
+  const e2 = document.getElementById('heroTitle'); if(e2) e2.innerHTML = (C.hero.title || DEFAULT.hero.title).replace('\n','<br>');
+  const e3 = document.getElementById('heroSubtitle'); if(e3) e3.textContent = C.hero.subtitle || DEFAULT.hero.subtitle;
+}
+
+function renderServices() {
+  const g = document.getElementById('srvGrid');
+  if(!g) return;
+  g.innerHTML = '';
+  (C.services || DEFAULT.services).forEach((s, i) => {
+    g.innerHTML += `<div class="srv-card rv" data-d="${Math.min(i+1,8)}">
+      <div class="srv-ico">${s.icon}</div>
+      <div class="srv-name">${s.name}</div>
+      <div class="srv-desc">${s.desc}</div>
+      <div class="srv-arr">→</div>
+    </div>`;
+  });
+  initReveal();
+}
+
+function filterPf(btn, cat) {
+  document.querySelectorAll('.pf-flt').forEach(b => b.classList.remove('on'));
+  btn.classList.add('on');
+  document.querySelectorAll('.pf-item').forEach(item => {
+    const show = cat === 'all' || item.dataset.cat === cat;
+    item.style.opacity = show ? '1' : '0.2';
+    item.style.transform = show ? '' : 'scale(0.95)';
+  });
+}
+
+function renderStats() {
+  const g = document.getElementById('statGrid');
+  if(!g) return;
+  g.innerHTML = (C.stats || DEFAULT.stats).map(s => `
+    <div class="stat-c">
+      <div class="stat-ico">${s.icon}</div>
+      <div class="stat-num" data-target="${s.value}" data-suffix="${s.suffix}">${s.value}${s.suffix}</div>
+      <div class="stat-lbl">${s.label}</div>
+    </div>`).join('');
+  initStatCounters();
+}
+
+function renderTestimonials() {
+  const track = document.getElementById('tstTrack');
+  if(!track) return;
+  const tsts = C.testimonials || DEFAULT.testimonials;
+  const all = [...tsts, ...tsts];
+  track.innerHTML = all.map(t => `
+    <div class="tst-card">
+      <div class="tst-stars">${'<span>★</span>'.repeat(5)}</div>
+      <div class="tst-text">"${t.text}"</div>
+      <div class="tst-auth">
+        <div class="tst-av">${t.initials||t.name.substring(0,2).toUpperCase()}</div>
+        <div>
+          <div class="tst-name">${t.name}</div>
+          <div class="tst-role">${t.role}</div>
+        </div>
+      </div>
+    </div>`).join('');
+}
+
+function renderContact() {
+  const ct = C.contact;
+  const waUrl = `https://wa.me/${ct.whatsapp.replace(/[^0-9]/g,'')}`;
+  const els = {
+    ctWA: el => el && (el.href = waUrl),
+    ctPhoneLink: el => el && (el.href = `tel:${ct.phone}`),
+    ctEmailLink: el => el && (el.href = `mailto:${ct.email}`),
+    ctWhatsapp: el => el && (el.textContent = ct.phone),
+    ctPhone: el => el && (el.textContent = ct.phone),
+    ctEmail: el => el && (el.textContent = ct.email),
+    ctLocation: el => el && (el.textContent = ct.location),
+    ftPhone: el => el && (el.textContent = ct.phone),
+    heroWA: el => { if(el){ el.href = waUrl; el.innerHTML = `💬 WhatsApp: ${ct.phone}`; } },
+    heroPhone: el => { if(el){ el.href = `tel:${ct.phone}`; el.innerHTML = `📞 ${ct.phone}`; } },
+    waFloat: el => el && (el.href = waUrl)
+  };
+  Object.entries(els).forEach(([id, fn]) => fn(document.getElementById(id)));
+}
+
+function renderSocial() {
+  const s = C.social;
+  const defs = [
+    { key:'instagram', icon:'📸', label:'Instagram' },
+    { key:'tiktok', icon:'🎵', label:'TikTok' },
+    { key:'youtube', icon:'▶️', label:'YouTube' },
+    { key:'linkedin', icon:'💼', label:'LinkedIn' },
+    { key:'behance', icon:'🎨', label:'Behance' }
+  ];
+  ['socLinks','socLinks2'].forEach(id => {
+    const el = document.getElementById(id);
+    if(!el) return;
+    el.innerHTML = defs.map(d => `<a href="${s[d.key]||'#'}" class="soc-lnk" title="${d.label}" ${s[d.key]&&s[d.key]!=='#'?'target="_blank"':''}>${d.icon}</a>`).join('');
+  });
+}
+
+/* ── STATS COUNTERS ── */
+function initStatCounters() {
+  const nums = document.querySelectorAll('.stat-num[data-target]');
+  const obs = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if(!e.isIntersecting) return;
+      const el = e.target;
+      const target = +el.dataset.target;
+      const suffix = el.dataset.suffix || '';
+      let cur = 0;
+      const step = target / (1800 / 16);
+      const iv = setInterval(() => {
+        cur = Math.min(cur + step, target);
+        el.textContent = Math.floor(cur) + suffix;
+        if(cur >= target) clearInterval(iv);
+      }, 16);
+      obs.unobserve(el);
+    });
+  }, { threshold: 0.5 });
+  nums.forEach(n => obs.observe(n));
+}
+
+/* ── SCROLL REVEAL ── */
+function initReveal() {
+  const all = document.querySelectorAll('.rv:not(.vis), .rvL:not(.vis), .rvR:not(.vis)');
+  const obs = new IntersectionObserver(entries => {
+    entries.forEach(e => { if(e.isIntersecting) e.target.classList.add('vis'); });
+  }, { threshold: 0.1, rootMargin: '0px 0px -60px 0px' });
+  all.forEach(r => obs.observe(r));
+}
+
+/* ── NAV ── */
+window.addEventListener('scroll', () => {
+  document.getElementById('navbar').classList.toggle('scrolled', window.scrollY > 60);
+});
+function openMob() { document.getElementById('mobNav').classList.add('open'); }
+function closeMob() { document.getElementById('mobNav').classList.remove('open'); }
+
+/* ── CURSOR ── */
+const cur = document.getElementById('cur');
+const curRing = document.getElementById('cur-ring');
+if(cur && curRing) {
+  let mx=0,my=0,rx=0,ry=0;
+  document.addEventListener('mousemove', e => { mx=e.clientX; my=e.clientY; });
+  (function animC() {
+    cur.style.transform = `translate(${mx-6}px,${my-6}px)`;
+    rx += (mx-rx-20)*.12; ry += (my-ry-20)*.12;
+    curRing.style.transform = `translate(${rx}px,${ry}px)`;
+    requestAnimationFrame(animC);
+  })();
+}
+
+/* ── PARTICLES ── */
+(function() {
+  const canvas = document.getElementById('hero-canvas');
+  const ctx = canvas.getContext('2d');
+  let W, H, particles = [];
+  function resize() { W = canvas.width = window.innerWidth; H = canvas.height = window.innerHeight; }
+  resize();
+  window.addEventListener('resize', resize);
+  const colors = ['rgba(0,212,255,','rgba(139,92,246,','rgba(59,130,246,','rgba(192,38,211,'];
+  class P {
+    constructor() { this.reset(); }
+    reset() {
+      this.x=Math.random()*W; this.y=Math.random()*H;
+      this.vx=(Math.random()-.5)*.4; this.vy=(Math.random()-.5)*.4;
+      this.size=Math.random()*2+.5;
+      this.color=colors[Math.floor(Math.random()*colors.length)];
+      this.alpha=Math.random()*.6+.2;
+      this.life=Math.random()*200+100; this.age=0;
+    }
+    update() { this.x+=this.vx; this.y+=this.vy; this.age++; if(this.age>this.life||this.x<0||this.x>W||this.y<0||this.y>H) this.reset(); }
+    draw() { ctx.beginPath(); ctx.arc(this.x,this.y,this.size,0,Math.PI*2); ctx.fillStyle=this.color+this.alpha+')'; ctx.fill(); }
+  }
+  for(let i=0; i<120; i++) particles.push(new P());
+  function connect() {
+    for(let i=0;i<particles.length;i++) for(let j=i+1;j<particles.length;j++) {
+      const dx=particles[i].x-particles[j].x, dy=particles[i].y-particles[j].y, d=Math.sqrt(dx*dx+dy*dy);
+      if(d<100) { ctx.beginPath(); ctx.moveTo(particles[i].x,particles[i].y); ctx.lineTo(particles[j].x,particles[j].y); ctx.strokeStyle=`rgba(0,212,255,${0.08*(1-d/100)})`; ctx.lineWidth=.5; ctx.stroke(); }
+    }
+  }
+  (function loop() { ctx.clearRect(0,0,W,H); particles.forEach(p=>{p.update();p.draw();}); connect(); requestAnimationFrame(loop); })();
+})();
+
+function submitForm(btn) {
+  btn.textContent = '✓ Message Sent!';
+  btn.style.background = 'linear-gradient(135deg,#10b981,#059669)';
+  btn.disabled = true;
+  setTimeout(() => { btn.textContent = 'Send Message ✦'; btn.style.background = ''; btn.disabled = false; }, 4000);
+}
+
+/* ════════════════════════════════════════════
+   ADMIN SYSTEM
+════════════════════════════════════════════ */
+function checkAdminRoute() {
+  const hash = window.location.hash;
+  if(hash === '#admin' || hash === '#/admin') {
+    document.getElementById('pub-site').style.display = 'none';
+    document.getElementById('loader').style.display = 'none';
+    document.body.style.cursor = 'auto';
+    const w = document.getElementById('adm-wrap');
+    w.classList.add('active');
+    buildAdminLogos();
+    if(sessionStorage.getItem('fm_admin_auth') === '1') {
+      showDashboard();
+    }
+  }
+}
+
+function buildAdminLogos() {
+  buildLoaderF(document.getElementById('admLoginLogo'));
+  buildLogo(document.getElementById('admSbLogo'));
+}
+
+function adminLogin() {
+  const u = document.getElementById('admUser').value.trim();
+  const p = document.getElementById('admPass').value;
+  const err = document.getElementById('adm-err');
+  if(u === ADMIN_CREDENTIALS.username && p === ADMIN_CREDENTIALS.password) {
+    sessionStorage.setItem('fm_admin_auth', '1');
+    err.textContent = '';
+    showDashboard();
+  } else {
+    err.textContent = '✕ Incorrect credentials. Please try again.';
+    document.getElementById('admPass').value = '';
+  }
+}
+
+function showDashboard() {
+  document.getElementById('adm-login').style.display = 'none';
+  const dash = document.getElementById('adm-dash');
+  dash.classList.add('active');
+  buildAdminForms();
+  renderAdminPortfolio();
+  renderAdminStats();
+  renderAdminServices();
+  renderAdminTestimonials();
+  renderOverviewCards();
+}
+
+function adminLogout() {
+  sessionStorage.removeItem('fm_admin_auth');
+  document.getElementById('adm-dash').classList.remove('active');
+  document.getElementById('adm-login').style.display = 'flex';
+  document.getElementById('admUser').value = '';
+  document.getElementById('admPass').value = '';
+}
+
+function admNav(sec) {
+  document.querySelectorAll('.adm-section').forEach(s => s.classList.remove('on'));
+  document.querySelectorAll('.adm-nav-btn').forEach(b => b.classList.remove('on'));
+  const s = document.getElementById('sec-' + sec);
+  if(s) s.classList.add('on');
+  if(event && event.currentTarget) event.currentTarget.classList.add('on');
+}
+
+function previewSite() {
+  window.location.hash = '';
+  window.location.reload();
+}
+
+function showToast(msg='✓ Saved!') {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2500);
+}
+
+/* ── BUILD ADMIN FORMS ── */
+function buildAdminForms() {
+  const fHeroEye = document.getElementById('fHeroEye'); if(fHeroEye) fHeroEye.value = C.hero.eyebrow;
+  const fHeroTitle = document.getElementById('fHeroTitle'); if(fHeroTitle) fHeroTitle.value = C.hero.title;
+  const fHeroSub = document.getElementById('fHeroSub'); if(fHeroSub) fHeroSub.value = C.hero.subtitle;
+  const fM = document.getElementById('fMission'); if(fM) fM.value = C.mission;
+  const fV = document.getElementById('fVision'); if(fV) fV.value = C.vision;
+  const fA1 = document.getElementById('fAbt1'); if(fA1) fA1.value = C.about.p1;
+  const fA2 = document.getElementById('fAbt2'); if(fA2) fA2.value = C.about.p2;
+  const fP = document.getElementById('fPhone'); if(fP) fP.value = C.contact.phone;
+  const fW = document.getElementById('fWA'); if(fW) fW.value = C.contact.whatsapp;
+  const fE = document.getElementById('fEmail'); if(fE) fE.value = C.contact.email;
+  const fL = document.getElementById('fLocation'); if(fL) fL.value = C.contact.location;
+  const fIG = document.getElementById('fIG'); if(fIG) fIG.value = C.social.instagram;
+  const fTT = document.getElementById('fTT'); if(fTT) fTT.value = C.social.tiktok;
+  const fYT = document.getElementById('fYT'); if(fYT) fYT.value = C.social.youtube;
+  const fLI = document.getElementById('fLI'); if(fLI) fLI.value = C.social.linkedin;
+  const fBE = document.getElementById('fBE'); if(fBE) fBE.value = C.social.behance;
+}
+
+/* ── OVERVIEW CARDS ── */
+function renderOverviewCards() {
+  const el = document.getElementById('ovCards');
+  if(!el) return;
+  el.innerHTML = `
+    <div class="adm-card"><div class="adm-card-n">${(C.portfolio||[]).length}</div><div class="adm-card-l">Portfolio Items</div></div>
+    <div class="adm-card"><div class="adm-card-n">${(C.testimonials||[]).length}</div><div class="adm-card-l">Testimonials</div></div>
+    <div class="adm-card"><div class="adm-card-n">${C.stats[0].value}${C.stats[0].suffix}</div><div class="adm-card-l">${C.stats[0].label}</div></div>
+    <div class="adm-card"><div class="adm-card-n">${C.stats[2].value}${C.stats[2].suffix}</div><div class="adm-card-l">${C.stats[2].label}</div></div>`;
+}
+
+/* ── SAVE FUNCTIONS ── */
+function saveHero() {
+  C.hero.eyebrow = document.getElementById('fHeroEye').value;
+  C.hero.title = document.getElementById('fHeroTitle').value;
+  C.hero.subtitle = document.getElementById('fHeroSub').value;
+  saveC(); renderHero(); showToast('✓ Hero saved!');
+}
+function saveMV() {
+  C.mission = document.getElementById('fMission').value;
+  C.vision = document.getElementById('fVision').value;
+  saveC();
+  const mt = document.getElementById('missionText'); if(mt) mt.textContent = C.mission;
+  const vt = document.getElementById('visionText'); if(vt) vt.textContent = C.vision;
+  showToast('✓ Mission & Vision saved!');
+}
+function saveAbout() {
+  C.about.p1 = document.getElementById('fAbt1').value;
+  C.about.p2 = document.getElementById('fAbt2').value;
+  saveC();
+  const a1 = document.getElementById('abtText1'); if(a1) a1.textContent = C.about.p1;
+  const a2 = document.getElementById('abtText2'); if(a2) a2.textContent = C.about.p2;
+  showToast('✓ About saved!');
+}
+function saveContact() {
+  C.contact.phone = document.getElementById('fPhone').value;
+  C.contact.whatsapp = document.getElementById('fWA').value;
+  C.contact.email = document.getElementById('fEmail').value;
+  C.contact.location = document.getElementById('fLocation').value;
+  saveC(); renderContact(); showToast('✓ Contact info saved!');
+}
+function saveSocial() {
+  C.social.instagram = document.getElementById('fIG').value;
+  C.social.tiktok = document.getElementById('fTT').value;
+  C.social.youtube = document.getElementById('fYT').value;
+  C.social.linkedin = document.getElementById('fLI').value;
+  C.social.behance = document.getElementById('fBE').value;
+  saveC(); renderSocial(); showToast('✓ Social links saved!');
+}
+
+/* ── STATS ADMIN ── */
+function renderAdminStats() {
+  const el = document.getElementById('admStatList');
+  if(!el) return;
+  el.innerHTML = (C.stats || []).map((s, i) => `
+    <div style="background:var(--glass);border:1px solid var(--glass-border);border-radius:12px;padding:20px 24px;margin-bottom:12px">
+      <div class="adm-row3">
+        <div class="adm-fg"><label class="adm-label">Icon (emoji)</label><input class="adm-field" value="${s.icon}" onchange="C.stats[${i}].icon=this.value"></div>
+        <div class="adm-fg"><label class="adm-label">Number Value</label><input class="adm-field" type="number" value="${s.value}" onchange="C.stats[${i}].value=+this.value"></div>
+        <div class="adm-fg"><label class="adm-label">Suffix (+, %, etc.)</label><input class="adm-field" value="${s.suffix}" onchange="C.stats[${i}].suffix=this.value"></div>
+      </div>
+      <div class="adm-fg"><label class="adm-label">Label</label><input class="adm-field" value="${s.label}" onchange="C.stats[${i}].label=this.value"></div>
+    </div>`).join('');
+}
+function saveStats() {
+  saveC(); renderStats(); renderOverviewCards(); showToast('✓ Stats saved!');
+}
+
+/* ── SERVICES ADMIN ── */
+function renderAdminServices() {
+  const el = document.getElementById('admSrvList');
+  if(!el) return;
+  el.innerHTML = (C.services || []).map((s, i) => `
+    <div style="background:var(--glass);border:1px solid var(--glass-border);border-radius:12px;padding:20px 24px;margin-bottom:12px">
+      <div style="font-family:var(--fhead);font-size:.75rem;color:var(--text-muted);margin-bottom:12px">SERVICE ${i+1}</div>
+      <div class="adm-row">
+        <div class="adm-fg"><label class="adm-label">Icon (emoji)</label><input class="adm-field" value="${s.icon}" onchange="C.services[${i}].icon=this.value"></div>
+        <div class="adm-fg"><label class="adm-label">Service Name</label><input class="adm-field" value="${s.name}" onchange="C.services[${i}].name=this.value"></div>
+      </div>
+      <div class="adm-fg"><label class="adm-label">Description</label><textarea class="adm-field" rows="2" onchange="C.services[${i}].desc=this.value">${s.desc}</textarea></div>
+    </div>`).join('');
+}
+function saveServices() {
+  saveC(); renderServices(); showToast('✓ Services saved!');
+}
+
+/* ── TESTIMONIALS ADMIN ── */
+function renderAdminTestimonials() {
+  const el = document.getElementById('admTstList');
+  if(!el) return;
+  el.innerHTML = '';
+  (C.testimonials || []).forEach((t, i) => {
+    const div = document.createElement('div');
+    div.className = 'tst-list-item';
+    div.innerHTML = `
+      <div class="tst-list-item-hdr">
+        <div style="font-family:var(--fhead);font-weight:700">${t.name} <span style="font-size:.75rem;color:var(--text-muted);font-weight:400">— ${t.role}</span></div>
+        <div class="adm-btn-grp">
+          <button class="adm-btn secondary sm" onclick="editTestimonial(${i})">✏️ Edit</button>
+          <button class="adm-btn danger sm" onclick="deleteTestimonial(${i})">🗑️</button>
+        </div>
+      </div>
+      <div style="font-size:.82rem;color:var(--text-secondary);font-style:italic">"${t.text.substring(0,100)}${t.text.length>100?'...':''}"</div>`;
+    el.appendChild(div);
+  });
+}
+
+function addTestimonial() {
+  const name = prompt('Client Name:');
+  if(!name) return;
+  const role = prompt('Role / Company:') || '';
+  const text = prompt('Testimonial text:') || '';
+  C.testimonials.push({ name, role, text, initials: name.substring(0,2).toUpperCase() });
+  saveC(); renderAdminTestimonials(); renderTestimonials(); renderOverviewCards(); showToast('✓ Testimonial added!');
+}
+function editTestimonial(i) {
+  const t = C.testimonials[i];
+  const name = prompt('Name:', t.name); if(name === null) return;
+  const role = prompt('Role:', t.role); if(role === null) return;
+  const text = prompt('Text:', t.text); if(text === null) return;
+  C.testimonials[i] = { name, role, text, initials: name.substring(0,2).toUpperCase() };
+  saveC(); renderAdminTestimonials(); renderTestimonials(); showToast('✓ Testimonial updated!');
+}
+function deleteTestimonial(i) {
+  if(!confirm('Delete this testimonial?')) return;
+  C.testimonials.splice(i, 1);
+  saveC(); renderAdminTestimonials(); renderTestimonials(); renderOverviewCards(); showToast('✓ Testimonial deleted!');
+}
+
+/* ── PORTFOLIO ADMIN ── */
+function renderAdminPortfolio() {
+  const el = document.getElementById('admPfList');
+  if(!el) return;
+  el.innerHTML = '';
+  const catLabels = {commercial:'Commercials',medical:'Medical',realestate:'Real Estate',auto:'Automotive',social:'Social Media',cgi:'CGI & VFX'};
+  (C.portfolio || []).forEach((item, i) => {
+    const div = document.createElement('div');
+    div.className = 'pf-list-item';
+    div.innerHTML = `
+      <div class="pf-list-thumb" style="background:${item.color||'var(--dark3)'}">
+        ${item.thumb ? `<img src="${item.thumb}" style="width:100%;height:100%;object-fit:cover;border-radius:6px">` : '🎬'}
+      </div>
+      <div class="pf-list-info">
+        <div class="pf-list-title">${item.title} ${item.featured ? '<span class="pf-list-featured">⭐ Featured</span>':''}</div>
+        <div class="pf-list-meta">${catLabels[item.cat]||item.cat} ${item.video ? '· 🎬 Has Video' : '· No video yet'}</div>
+      </div>
+      <div class="pf-list-actions">
+        <button class="adm-btn secondary sm" onclick="movePf(${i},-1)" ${i===0?'disabled':''}>↑</button>
+        <button class="adm-btn secondary sm" onclick="movePf(${i},1)" ${i===(C.portfolio.length-1)?'disabled':''}>↓</button>
+        <button class="adm-btn secondary sm" onclick="editPf(${i})">✏️</button>
+        <button class="adm-btn danger sm" onclick="deletePf(${i})">🗑️</button>
+      </div>`;
+    el.appendChild(div);
+  });
+}
+
+let pfThumbB64 = '';
+
+function handleThumbUpload(input) {
+  const file = input.files[0];
+  if(!file) return;
+  const reader = new FileReader();
+  reader.onload = e => { pfThumbB64 = e.target.result; document.getElementById('pfThumbData').value = pfThumbB64; };
+  reader.readAsDataURL(file);
+}
+
+function openPfModal(editIdx) {
+  pfThumbB64 = '';
+  const modal = document.getElementById('pf-modal');
+  modal.classList.add('open');
+  document.getElementById('pfEditId').value = editIdx !== undefined ? editIdx : '';
+  document.getElementById('pfModalTitle').textContent = editIdx !== undefined ? 'Edit Portfolio Item' : 'Add Portfolio Item';
+  if(editIdx !== undefined) {
+    const item = C.portfolio[editIdx];
+    document.getElementById('pfTitle').value = item.title;
+    document.getElementById('pfCat').value = item.cat;
+    document.getElementById('pfDesc').value = item.desc || '';
+    document.getElementById('pfVideo').value = item.video || '';
+    document.getElementById('pfThumbUrl').value = item.thumb && !item.thumb.startsWith('data:') ? item.thumb : '';
+    document.getElementById('pfColor').value = item.color || 'rgba(0,212,255,0.3)';
+    document.getElementById('pfFeatured').checked = !!item.featured;
+    document.getElementById('pfThumbData').value = item.thumb && item.thumb.startsWith('data:') ? item.thumb : '';
+  } else {
+    document.getElementById('pfTitle').value = '';
+    document.getElementById('pfCat').value = 'commercial';
+    document.getElementById('pfDesc').value = '';
+    document.getElementById('pfVideo').value = '';
+    document.getElementById('pfThumbUrl').value = '';
+    document.getElementById('pfColor').value = 'rgba(0,212,255,0.3)';
+    document.getElementById('pfFeatured').checked = false;
+    document.getElementById('pfThumbData').value = '';
+  }
+}
+
+function closePfModal() {
+  document.getElementById('pf-modal').classList.remove('open');
+}
+
+function savePfItem() {
+  const editIdx = document.getElementById('pfEditId').value;
+  const thumbData = document.getElementById('pfThumbData').value;
+  const thumbUrl = document.getElementById('pfThumbUrl').value.trim();
+  const thumb = thumbData || thumbUrl || '';
+  const item = {
+    id: editIdx !== '' ? C.portfolio[+editIdx].id : 'pf' + Date.now(),
+    title: document.getElementById('pfTitle').value.trim() || 'Untitled Project',
+    cat: document.getElementById('pfCat').value,
+    desc: document.getElementById('pfDesc').value.trim(),
+    video: document.getElementById('pfVideo').value.trim(),
+    thumb: thumb,
+    color: document.getElementById('pfColor').value,
+    featured: document.getElementById('pfFeatured').checked
+  };
+  if(editIdx !== '') {
+    C.portfolio[+editIdx] = item;
+  } else {
+    C.portfolio.push(item);
+  }
+  saveC();
+  renderAdminPortfolio();
+  renderPortfolio();
+  renderOverviewCards();
+  closePfModal();
+  showToast(editIdx !== '' ? '✓ Project updated!' : '✓ Project added!');
+}
+
+function editPf(i) {
+  openPfModal(i);
+}
+
+function deletePf(i) {
+  if(!confirm('Delete this portfolio item?')) return;
+  C.portfolio.splice(i, 1);
+  saveC(); renderAdminPortfolio(); renderPortfolio(); renderOverviewCards(); showToast('✓ Project deleted!');
+}
+
+function movePf(i, dir) {
+  const j = i + dir;
+  if(j < 0 || j >= C.portfolio.length) return;
+  [C.portfolio[i], C.portfolio[j]] = [C.portfolio[j], C.portfolio[i]];
+  saveC(); renderAdminPortfolio(); renderPortfolio();
+}
+
+/* ── INIT ── */
+(function init() {
+  buildLogo(document.getElementById('navLogo'));
+  buildLogo(document.getElementById('ftLogo'));
+  buildAboutF();
+  checkAdminRoute();
+  renderAll();
+  initReveal();
+  let logoClicks = 0;
+  const navLogo = document.querySelector('.nav-logo');
+  if(navLogo) navLogo.addEventListener('click', e => {
+    e.preventDefault();
+    logoClicks++;
+    if(logoClicks >= 3) { logoClicks = 0; window.location.hash = '#admin'; window.location.reload(); }
+    setTimeout(() => logoClicks = 0, 1500);
+  });
+})();
+
+window.addEventListener('hashchange', checkAdminRoute);
+</script>
+</body>
+</html>
