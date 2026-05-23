@@ -1,6 +1,3 @@
-
-
-```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -274,7 +271,6 @@ section{padding:var(--spad) 0}
 .f-row{display:grid;grid-template-columns:1fr 1fr;gap:16px}
 .f-submit{width:100%;padding:18px;border-radius:12px;background:var(--grad);border:none;color:#fff;font-family:var(--fhead);font-size:.95rem;font-weight:700;letter-spacing:.08em;cursor:none;transition:var(--ease);margin-top:8px}
 .f-submit:hover{transform:translateY(-3px);box-shadow:0 20px 60px rgba(0,212,255,.3)}
-.map-ph{margin-top:40px;border-radius:16px;background:var(--dark3);border:1px solid var(--glass-border);height:180px;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:12px;font-family:var(--fhead);font-size:.85rem;color:var(--text-muted);position:relative;overflow:hidden}
 .map-ph{margin-top:40px;border-radius:16px;background:var(--dark3);border:1px solid var(--glass-border);height:180px;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:12px;font-family:var(--fhead);font-size:.85rem;color:var(--text-muted);position:relative;overflow:hidden}
 .map-g{position:absolute;inset:0;background-image:linear-gradient(rgba(0,212,255,.04) 1px,transparent 1px),linear-gradient(90deg,rgba(0,212,255,.04) 1px,transparent 1px);background-size:24px 24px}
 .map-pin{font-size:2rem;position:relative;z-index:1;animation:pinB 2s ease-in-out infinite}
@@ -1060,8 +1056,9 @@ const DEFAULT = {
 };
 
 /* ── LOAD CONTENT ── */
-// تم تعديل هذا السطر برمجياً ليقرأ الـ DEFAULT كنسخة عامة أساسية دائماً بدلاً من متصفحك لوحدك
-let C = JSON.parse(JSON.stringify(DEFAULT));
+// تم إصلاح الكود هنا ليقرأ من التخزين المحلي أولاً، ليعمل نظام الحفظ بشكل صحيح عند الجميع
+let savedData = localStorage.getItem('fm_content_v2');
+let C = savedData ? JSON.parse(savedData) : JSON.parse(JSON.stringify(DEFAULT));
 
 function saveC() {
   localStorage.setItem('fm_content_v2', JSON.stringify(C));
@@ -1788,5 +1785,3 @@ window.addEventListener('hashchange', checkAdminRoute);
 </script>
 </body>
 </html>
-
-```
