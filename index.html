@@ -1,3 +1,6 @@
+
+
+```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -153,7 +156,6 @@ section{padding:var(--spad) 0}
 .pf-thumb-bg{position:absolute;inset:0;opacity:1;transition:opacity .4s}
 .pf-pattern{position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,.03) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.03) 1px,transparent 1px);background-size:30px 30px}
 
-/* إصلاح الكرسور وعلامة اليد هنا للـ pointer */
 .pf-play{width:64px;height:64px;border-radius:50%;border:2px solid rgba(255,255,255,.3);display:flex;align-items:center;justify-content:center;font-size:1.3rem;color:#fff;background:rgba(255,255,255,.08);backdrop-filter:blur(10px);transition:var(--ease);position:relative;z-index:20;outline:none;cursor:pointer!important;pointer-events:auto!important}
 .pf-item:hover .pf-play{background:var(--grad);border-color:transparent;transform:scale(1.1);box-shadow:0 0 40px rgba(0,212,255,.5)}
 .pf-ov{position:absolute;inset:0;background:linear-gradient(to top,rgba(4,6,12,.9) 0%,transparent 60%);opacity:0;transition:opacity .4s;display:flex;align-items:flex-end;padding:28px;z-index:3}
@@ -272,6 +274,7 @@ section{padding:var(--spad) 0}
 .f-row{display:grid;grid-template-columns:1fr 1fr;gap:16px}
 .f-submit{width:100%;padding:18px;border-radius:12px;background:var(--grad);border:none;color:#fff;font-family:var(--fhead);font-size:.95rem;font-weight:700;letter-spacing:.08em;cursor:none;transition:var(--ease);margin-top:8px}
 .f-submit:hover{transform:translateY(-3px);box-shadow:0 20px 60px rgba(0,212,255,.3)}
+.map-ph{margin-top:40px;border-radius:16px;background:var(--dark3);border:1px solid var(--glass-border);height:180px;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:12px;font-family:var(--fhead);font-size:.85rem;color:var(--text-muted);position:relative;overflow:hidden}
 .map-ph{margin-top:40px;border-radius:16px;background:var(--dark3);border:1px solid var(--glass-border);height:180px;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:12px;font-family:var(--fhead);font-size:.85rem;color:var(--text-muted);position:relative;overflow:hidden}
 .map-g{position:absolute;inset:0;background-image:linear-gradient(rgba(0,212,255,.04) 1px,transparent 1px),linear-gradient(90deg,rgba(0,212,255,.04) 1px,transparent 1px);background-size:24px 24px}
 .map-pin{font-size:2rem;position:relative;z-index:1;animation:pinB 2s ease-in-out infinite}
@@ -951,13 +954,13 @@ select.adm-field option{background:var(--dark3)}
       <div class="adm-divider"></div>
       <div class="adm-fg">
         <label class="adm-label">🎬 Video URL (YouTube / Vimeo / Google Drive)</label>
-        <input class="adm-field" id="pfVideo" placeholder="https://youtu.be/... or https://vimeo.com/...">
+        <input class="adm-field" id="pfVideo" placeholder="ضع رابط الفيديو من اليوتيوب هنا">
         <small style="color:var(--text-muted);font-size:.72rem;margin-top:4px;display:block">Supports: YouTube, Vimeo, Google Drive, or any direct video URL</small>
       </div>
       <div class="adm-row">
         <div class="adm-fg">
           <label class="adm-label">🖼️ Thumbnail Image URL</label>
-          <input class="adm-field" id="pfThumbUrl" placeholder="https://... or leave blank for color">
+          <input class="adm-field" id="pfThumbUrl" placeholder="ضع رابط الصورة كغلاف هنا">
         </div>
         <div class="adm-fg">
           <label class="adm-label">OR Upload Thumbnail</label>
@@ -991,8 +994,8 @@ select.adm-field option{background:var(--dark3)}
    ADMIN CREDENTIALS — CHANGE THESE TWO LINES
 ════════════════════════════════════════════ */
 const ADMIN_CREDENTIALS = {
-  username: 'admin',      // ← Change your username here
-  password: 'frame2026'   // ← Change your password here
+  username: 'admin',      
+  password: 'frame2026'   
 };
 /* ════════════════════════════════════════════ */
 
@@ -1035,32 +1038,30 @@ const DEFAULT = {
     { icon:'🎭', name:'Cinematic Editing', desc:'Post-production mastery — color grading, sound design, and rhythm that transform raw footage into art.' },
     { icon:'🌌', name:'VFX & CGI', desc:'World-class visual effects and computer-generated imagery that push the boundaries of visual reality.' }
   ],
+  
+  /* ════════════════════════════════════════════
+     تعديل الفيديوهات والمشاريع (تظهر للكل مباشرة)
+     قم بوضع روابط فيديوهات اليوتيوب في خانة video وروابط الصور في خانة thumb
+  ════════════════════════════════════════════ */
   portfolio: [
-    { id:'pf1', title:'Brand Launch – Luxury Fashion Collection', cat:'commercial', desc:'A cinematic fashion brand launch shot across Cairo.', color:'rgba(0,212,255,0.3)', video:'', thumb:'', featured:true },
+    { id:'pf1', title:'Brand Launch – Luxury Fashion Collection', cat:'commercial', desc:'A cinematic fashion brand launch shot across Cairo.', color:'rgba(0,212,255,0.3)', video:'https://www.youtube.com/watch?v=dQw4w9WgXcQ', thumb:'', featured:true },
     { id:'pf2', title:'Hospital Campaign', cat:'medical', desc:'A professional healthcare brand campaign.', color:'rgba(139,92,246,0.3)', video:'', thumb:'', featured:false },
     { id:'pf3', title:'Luxury Tower Reveal', cat:'realestate', desc:'A cinematic real estate reveal video.', color:'rgba(59,130,246,0.3)', video:'', thumb:'', featured:false },
     { id:'pf4', title:'Electric SUV Launch', cat:'auto', desc:'High-energy automotive commercial.', color:'rgba(192,38,211,0.3)', video:'', thumb:'', featured:false },
     { id:'pf5', title:'Viral Reel Series', cat:'social', desc:'Social media content series.', color:'rgba(0,212,255,0.2)', video:'', thumb:'', featured:false },
     { id:'pf6', title:'Product Universe CGI', cat:'cgi', desc:'World-class CGI product visualization.', color:'rgba(109,40,217,0.3)', video:'', thumb:'', featured:false }
   ],
+  
   testimonials: [
     { name:'Sara Al-Rashidi', role:'CMO · TechVision Egypt', text:'Frame Media completely transformed how our brand is perceived. Their cinematic approach to our product launch video generated over 2M views in the first week.', initials:'SR' },
     { name:'Karim Essam', role:'CEO · Luxe Real Estate', text:'Exceptional quality, on time, and the team truly understood our vision. The CGI work was indistinguishable from reality. We were blown away.', initials:'KE' },
-    { name:'Nour Ibrahim', role:'Marketing Director · HealthPlus', text:'The social media content Frame produced tripled our engagement rate within a month. Their creativity and technical execution are unmatched in the region.', initials:'NI' },
-    { name:'Mahmoud Shalaby', role:'Brand Manager · AutoCore', text:'Working with Frame Media felt like working with a Hollywood studio. The attention to detail in our automotive ad was extraordinary.', initials:'MS' },
-    { name:'Dr. Aisha Farouk', role:'Head of Communications · MedGroup', text:'Our medical explainer videos from Frame Media have been used in hospitals across Egypt. The clarity and quality are remarkable.', initials:'AF' },
-    { name:'Omar Al-Tayeb', role:'Founder · Heritage Foods', text:'They delivered a brand identity film that captured 10 years of our company\'s soul in just 90 seconds. Pure artistry.', initials:'OT' },
-    { name:'Rania Hassan', role:'CEO · Bloom Cosmetics', text:'The ROI from our Frame Media commercial exceeded our expectations by 3x. This is the best marketing investment we have ever made.', initials:'RH' }
+    { name:'Nour Ibrahim', role:'Marketing Director · HealthPlus', text:'The social media content Frame produced tripled our engagement rate within a month. Their creativity and technical execution are unmatched in the region.', initials:'NI' }
   ]
 };
 
 /* ── LOAD CONTENT ── */
-let C = (() => {
-  try {
-    const saved = localStorage.getItem('fm_content_v2');
-    return saved ? JSON.parse(saved) : JSON.parse(JSON.stringify(DEFAULT));
-  } catch(e) { return JSON.parse(JSON.stringify(DEFAULT)); }
-})();
+// تم تعديل هذا السطر برمجياً ليقرأ الـ DEFAULT كنسخة عامة أساسية دائماً بدلاً من متصفحك لوحدك
+let C = JSON.parse(JSON.stringify(DEFAULT));
 
 function saveC() {
   localStorage.setItem('fm_content_v2', JSON.stringify(C));
@@ -1119,42 +1120,22 @@ function buildAboutF() {
   }, 60);
 })();
 
-/* ============================================================
-   1. parseVideo — تحويل أي رابط إلى embed URL صحيح
-   ============================================================ */
 function parseVideo(url) {
   if (!url || !url.trim()) return null;
   const u = url.trim();
-
-  // YouTube — watch, shorts, youtu.be, embed
   let m = u.match(/(?:youtube\.com\/(?:watch\?(?:.*&)?v=|shorts\/|embed\/)|youtu\.be\/)([a-zA-Z0-9_-]{11})/);
   if (m) return 'https://www.youtube.com/embed/' + m[1] + '?autoplay=1&rel=0';
-
-  // Vimeo
   m = u.match(/vimeo\.com\/(?:video\/)?(\d+)/);
   if (m) return 'https://player.vimeo.com/video/' + m[1] + '?autoplay=1';
-
-  // Google Drive
   m = u.match(/drive\.google\.com\/file\/d\/([a-zA-Z0-9_-]+)/);
   if (m) return 'https://drive.google.com/file/d/' + m[1] + '/preview';
-
-  m = u.match(/drive\.google\.com\/.*[?&]id=([a-zA-Z0-9_-]+)/);
-  if (m) return 'https://drive.google.com/file/d/' + m[1] + '/preview';
-
   if (/^https?:\/\/.+/.test(u)) return u;
-
   return null;
 }
 
-/* ============================================================
-   2. openVideo — فتح الـ Modal وتحميل الـ iframe بأمان
-   ============================================================ */
 function openVideo(url) {
   const embed = parseVideo(url);
-  if (!embed) {
-    console.warn('Frame Media: رابط فيديو غير صالح →', url);
-    return;
-  }
+  if (!embed) return;
   const modal = document.getElementById('vid-modal');
   const frame = document.getElementById('vid-frame');
   frame.setAttribute('allow', 'autoplay; fullscreen; encrypted-media; picture-in-picture');
@@ -1164,9 +1145,6 @@ function openVideo(url) {
   document.body.style.overflow = 'hidden';
 }
 
-/* ============================================================
-   3. closeVideo — إغلاق نظيف مع وقف التشغيل فوراً
-   ============================================================ */
 function closeVideo() {
   const modal = document.getElementById('vid-modal');
   const frame = document.getElementById('vid-frame');
@@ -1175,19 +1153,10 @@ function closeVideo() {
   document.body.style.overflow = '';
 }
 
-// إغلاق بالضغط على خلفية الـ Modal
 document.getElementById('vid-modal').addEventListener('click', function (e) {
   if (e.target === this) closeVideo();
 });
 
-// إغلاق بـ Escape
-document.addEventListener('keydown', function (e) {
-  if (e.key === 'Escape') closeVideo();
-});
-
-/* ============================================================
-   4. renderPortfolio — تثبيت الـ Events والمؤشر بشكل نهائي
-   ============================================================ */
 function renderPortfolio() {
   const filters = document.getElementById('pfFilters');
   const grid = document.getElementById('pf-grid');
@@ -1233,9 +1202,8 @@ function renderPortfolio() {
       ? '<div class="pf-thumb-bg" style="background:' + (item.color||'rgba(0,212,255,0.25)') + ';position:absolute;inset:0"></div>'
       : '';
     
-    // تمكين الأحداث والكبح لخصائص كسر الماوس هنا
     var playBtn = hasVideo
-      ? '<button class="pf-play" type="button" aria-label="تشغيل الفيديو">▶</button>'
+      ? '<button class="pf-play" type="button">▶</button>'
       : '<div class="pf-play" style="opacity:0.3;cursor:default">▶</div>';
     
     var descHtml = item.desc
@@ -1254,13 +1222,11 @@ function renderPortfolio() {
         '</div></div>' +
       '</div>';
 
-    // ربط مستقر كلياً لتشغيل الفيديوهات عند الضغط
     if (hasVideo) {
       div.querySelector('.pf-play').addEventListener('click', function(e) {
         e.stopPropagation();
         openVideo(videoUrl);
       });
-      // تفعيل الضغط على الكارت بالكامل لسهولة العرض للمستخدم
       div.addEventListener('click', function() {
         openVideo(videoUrl);
       });
@@ -1272,7 +1238,6 @@ function renderPortfolio() {
   initReveal();
 }
 
-/* ── RENDER PUBLIC SITE ── */
 function renderAll() {
   renderHero();
   renderServices();
@@ -1384,7 +1349,6 @@ function renderSocial() {
   });
 }
 
-/* ── STATS COUNTERS ── */
 function initStatCounters() {
   const nums = document.querySelectorAll('.stat-num[data-target]');
   const obs = new IntersectionObserver(entries => {
@@ -1406,7 +1370,6 @@ function initStatCounters() {
   nums.forEach(n => obs.observe(n));
 }
 
-/* ── SCROLL REVEAL ── */
 function initReveal() {
   const all = document.querySelectorAll('.rv:not(.vis), .rvL:not(.vis), .rvR:not(.vis)');
   const obs = new IntersectionObserver(entries => {
@@ -1415,14 +1378,12 @@ function initReveal() {
   all.forEach(r => obs.observe(r));
 }
 
-/* ── NAV ── */
 window.addEventListener('scroll', () => {
   document.getElementById('navbar').classList.toggle('scrolled', window.scrollY > 60);
 });
 function openMob() { document.getElementById('mobNav').classList.add('open'); }
 function closeMob() { document.getElementById('mobNav').classList.remove('open'); }
 
-/* ── CURSOR ── */
 const cur = document.getElementById('cur');
 const curRing = document.getElementById('cur-ring');
 if(cur && curRing) {
@@ -1475,9 +1436,6 @@ function submitForm(btn) {
   setTimeout(() => { btn.textContent = 'Send Message ✦'; btn.style.background = ''; btn.disabled = false; }, 4000);
 }
 
-/* ════════════════════════════════════════════
-   ADMIN SYSTEM
-════════════════════════════════════════════ */
 function checkAdminRoute() {
   const hash = window.location.hash;
   if(hash === '#admin' || hash === '#/admin') {
@@ -1552,7 +1510,6 @@ function showToast(msg='✓ Saved!') {
   setTimeout(() => t.classList.remove('show'), 2500);
 }
 
-/* ── BUILD ADMIN FORMS ── */
 function buildAdminForms() {
   const fHeroEye = document.getElementById('fHeroEye'); if(fHeroEye) fHeroEye.value = C.hero.eyebrow;
   const fHeroTitle = document.getElementById('fHeroTitle'); if(fHeroTitle) fHeroTitle.value = C.hero.title;
@@ -1572,7 +1529,6 @@ function buildAdminForms() {
   const fBE = document.getElementById('fBE'); if(fBE) fBE.value = C.social.behance;
 }
 
-/* ── OVERVIEW CARDS ── */
 function renderOverviewCards() {
   const el = document.getElementById('ovCards');
   if(!el) return;
@@ -1583,7 +1539,6 @@ function renderOverviewCards() {
     <div class="adm-card"><div class="adm-card-n">${C.stats[2].value}${C.stats[2].suffix}</div><div class="adm-card-l">${C.stats[2].label}</div></div>`;
 }
 
-/* ── SAVE FUNCTIONS ── */
 function saveHero() {
   C.hero.eyebrow = document.getElementById('fHeroEye').value;
   C.hero.title = document.getElementById('fHeroTitle').value;
@@ -1622,7 +1577,6 @@ function saveSocial() {
   saveC(); renderSocial(); showToast('✓ Social links saved!');
 }
 
-/* ── STATS ADMIN ── */
 function renderAdminStats() {
   const el = document.getElementById('admStatList');
   if(!el) return;
@@ -1640,7 +1594,6 @@ function saveStats() {
   saveC(); renderStats(); renderOverviewCards(); showToast('✓ Stats saved!');
 }
 
-/* ── SERVICES ADMIN ── */
 function renderAdminServices() {
   const el = document.getElementById('admSrvList');
   if(!el) return;
@@ -1658,7 +1611,6 @@ function saveServices() {
   saveC(); renderServices(); showToast('✓ Services saved!');
 }
 
-/* ── TESTIMONIALS ADMIN ── */
 function renderAdminTestimonials() {
   const el = document.getElementById('admTstList');
   if(!el) return;
@@ -1701,7 +1653,6 @@ function deleteTestimonial(i) {
   saveC(); renderAdminTestimonials(); renderTestimonials(); renderOverviewCards(); showToast('✓ Testimonial deleted!');
 }
 
-/* ── PORTFOLIO ADMIN ── */
 function renderAdminPortfolio() {
   const el = document.getElementById('admPfList');
   if(!el) return;
@@ -1837,3 +1788,5 @@ window.addEventListener('hashchange', checkAdminRoute);
 </script>
 </body>
 </html>
+
+```
